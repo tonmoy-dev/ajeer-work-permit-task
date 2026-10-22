@@ -14,9 +14,11 @@
     <style>
         :root {
             --primary: #1b365d;
-            --border-color: #94a3b8;
-            --bg-table-title: #f1f5f9;
-            --bg-table-label: #f8fafc;
+            --border-color: #000000;
+            --bg-table-title: #eff2f6;
+            --bg-table-label: #eff2f6;
+            /* #f8fafc; */
+            /* #f1f5f9; */
         }
 
         * {
@@ -69,6 +71,11 @@
 
         .btn-print {
             background: #1b365d;
+            color: white;
+        }
+
+        .btn-window-print {
+            background: #0284c7;
             color: white;
         }
 
@@ -162,13 +169,13 @@
             direction: ltr;
             /* Title -> Ajeer Logo -> Ministry Logo */
             flex: 1;
-            gap: 28px;
-            padding-right: 4px;
+            gap: 24px;
+            padding-right: 18px;
             padding-left: 20px;
         }
 
         .doc-main-title {
-            font-size: 1.45rem;
+            font-size: 1.4rem;
             font-weight: 800;
             color: #000000;
             white-space: nowrap;
@@ -178,7 +185,7 @@
         }
 
         .header-logo-ajeer {
-            height: 48px;
+            height: 46px;
             width: auto;
             max-width: 90px;
             object-fit: contain;
@@ -187,7 +194,7 @@
         }
 
         .header-logo-ministry {
-            height: 52px;
+            height: 50px;
             width: auto;
             max-width: 175px;
             object-fit: contain;
@@ -211,18 +218,19 @@
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
-            border: 1px solid var(--border-color);
+            border: 0.5px solid #000000;
             background: #ffffff;
             margin-bottom: 12px;
+            direction: rtl;
         }
 
         .info-table-unified td {
-            border: 1px solid var(--border-color);
-            padding: 5px 8px;
+            border: 0.5px solid #000000;
+            padding: 5px 10px;
             font-size: 0.85rem;
             vertical-align: middle;
-            text-align: center;
-            /* strictly center-aligned across all cells per Image 1 */
+            text-align: right;
+            direction: rtl;
             box-sizing: border-box;
             word-break: break-word;
         }
@@ -232,19 +240,21 @@
             background-color: var(--bg-table-title);
             font-weight: 800;
             font-size: 0.92rem;
-            padding: 5px 8px !important;
-            color: #0f172a;
-            text-align: center;
+            padding: 5px 10px !important;
+            color: #000000;
+            text-align: center !important;
+            direction: rtl;
         }
 
         /* Label Cells (Col 1 & Col 3) */
         .col-lbl {
             background-color: var(--bg-table-label);
             font-weight: 700;
-            color: #1e293b;
+            color: #000000;
             font-size: 0.83rem;
             line-height: 1.35;
-            text-align: center;
+            text-align: right;
+            direction: rtl;
         }
 
         /* Value Cells (Col 2 & Col 4) */
@@ -253,7 +263,8 @@
             font-weight: 600;
             color: #000000;
             font-size: 0.85rem;
-            text-align: center;
+            text-align: right;
+            direction: rtl;
         }
 
         /* Colspan 3 values (Contract Description & Work Location) */
@@ -261,17 +272,19 @@
             background-color: #ffffff;
             font-weight: 600;
             color: #000000;
-            text-align: center;
+            text-align: right;
+            direction: rtl;
             font-size: 0.85rem;
         }
 
         /* ── Declarations Section ── */
         .declarations-block {
-            margin-top: 13px;
+            margin-top: 30px;
             font-size: 0.83rem;
             line-height: 1.6;
-            color: #0f172a;
+            color: #000000;
         }
+
 
         .declarations-heading {
             text-align: center;
@@ -284,7 +297,7 @@
         }
 
         .declarations-intro {
-            font-weight: 700;
+            font-weight: 600;
             margin-bottom: 6px;
             font-size: 0.86rem;
             color: #000000;
@@ -294,6 +307,8 @@
             list-style: none;
             padding-right: 0;
             margin: 0;
+            color: #000000;
+            font-weight: 600;
         }
 
         .declarations-list li {
@@ -303,6 +318,7 @@
             text-align: justify;
             text-justify: inter-word;
             font-size: 0.83rem;
+            color: #000000;
         }
 
         .declarations-list li::before {
@@ -315,14 +331,20 @@
 
         /* ── Footer ── */
         .doc-footer {
-            margin-top: 22px;
+            margin-top: 40px;
             text-align: center;
             font-size: 0.82rem;
             font-weight: 600;
-            color: #1e293b;
+            color: #000000;
             line-height: 1.6;
             border: none;
             /* strictly NO dashed line per PDF */
+        }
+
+        .doc-footer-link {
+            display: inline-block;
+            direction: ltr;
+            unicode-bidi: isolate;
         }
 
         /* ── Print / PDF Generation Rules ── */
@@ -357,6 +379,27 @@
             .declarations-block {
                 page-break-inside: avoid;
             }
+
+            .info-table-unified,
+            .info-table-unified td {
+                border: 0.5px solid #000000 !important;
+                text-align: right !important;
+                direction: rtl !important;
+            }
+
+            .info-table-unified .table-section-title {
+                text-align: center !important;
+            }
+
+            .declarations-block,
+            .declarations-heading,
+            .declarations-intro,
+            .declarations-list,
+            .declarations-list li,
+            .declarations-list li::before,
+            .doc-footer {
+                color: #000000 !important;
+            }
         }
 
         /* Applied temporarily while rasterizing the page into a PDF */
@@ -365,6 +408,29 @@
             border: none !important;
             min-height: auto !important;
             margin: 0 !important;
+        }
+
+        .page-container.pdf-mode .info-table-unified,
+        .page-container.pdf-mode .info-table-unified td {
+            border: 0.5px solid #000000 !important;
+            text-align: right !important;
+            direction: rtl !important;
+        }
+
+        .page-container.pdf-mode .info-table-unified .table-section-title {
+            text-align: center !important;
+        }
+
+        /* Prevent html2canvas from scrambling Arabic punctuation and spaces in PDF mode */
+        .page-container.pdf-mode .declarations-list li {
+            text-align: right !important;
+            text-justify: none !important;
+        }
+
+        .page-container.pdf-mode .doc-footer-link {
+            display: inline-block !important;
+            direction: ltr !important;
+            unicode-bidi: isolate !important;
         }
 
         /* PDF loader overlay */
@@ -422,11 +488,13 @@
     <div class="toolbar-actions" id="docToolbar">
         <a href="index.html" class="btn-tool btn-back" id="btnDocBack">⬅ تعديل البيانات (Edit Form)</a>
         <div style="display:flex;gap:8px;align-items:center;">
-            <button onclick="downloadPDF()" class="btn-tool btn-print" id="btnDocPrint">⬇ تحميل PDF</button>
+            <button onclick="window.print()" class="btn-tool btn-window-print" id="btnDocWindowPrint"
+                style="display: none;">🖨️ طباعة (Print)</button>
+            <button onclick=" downloadPDF()" class="btn-tool btn-print" id="btnDocPrint">⬇ تحميل PDF</button>
             <a id="btnSimulateScan" href="#" target="_blank" class="btn-tool btn-verify" style="display: none;">📱 فحص
                 الـ QR (Verify)</a>
-            <button type="button" class="btn-tool btn-lang" id="btnDocLang" style="display:none !important" onclick="toggleLanguage()"
-                title="تغيير اللغة / Switch Language">
+            <button type="button" class="btn-tool btn-lang" id="btnDocLang" style="display:none !important"
+                onclick="toggleLanguage()" title="تغيير اللغة / Switch Language">
                 <span id="docLangBtnText">English</span> 🌐
             </button>
         </div>
@@ -546,7 +614,8 @@
 
         <!-- Footer Notice -->
         <div class="doc-footer">
-            للتحقق من صحة هذا التصريح وسريان مفعوله بإمكانك زيارة موقع أجير (https://ajeer.com.sa)<br>
+            للتحقق من صحة هذا التصريح وسريان مفعوله بإمكانك زيارة موقع أجير <span class="doc-footer-link"
+                dir="ltr">(https://ajeer.com.sa)</span><br>
             * خدمة معتمدة من وزارة الموارد البشرية والتنمية الاجتماعية
         </div>
 
@@ -561,12 +630,14 @@
         const toolbarI18n = {
             ar: {
                 btnBack: "⬅ تعديل البيانات (Edit Form)",
+                btnWindowPrint: "🖨️ طباعة (Print)",
                 btnPrint: "⬇ تحميل PDF",
                 btnVerify: "📱 فحص الـ QR (Verify)",
                 langBtnText: "English"
             },
             en: {
                 btnBack: "⬅ Back to Form",
+                btnWindowPrint: "🖨️ Print Document",
                 btnPrint: "⬇ Download PDF",
                 btnVerify: "📱 Verify QR Code",
                 langBtnText: "عربى"
@@ -578,6 +649,9 @@
             const t = toolbarI18n[lang] || toolbarI18n.ar;
 
             document.getElementById('btnDocBack').innerText = t.btnBack;
+            if (document.getElementById('btnDocWindowPrint')) {
+                document.getElementById('btnDocWindowPrint').innerText = t.btnWindowPrint;
+            }
             document.getElementById('btnDocPrint').innerText = t.btnPrint;
             document.getElementById('btnSimulateScan').innerText = t.btnVerify;
             document.getElementById('docLangBtnText').innerText = t.langBtnText;
@@ -624,9 +698,17 @@
         }
 
         function generatePermitNumber(idNumber) {
-            if (!idNumber || idNumber === '—') return 'TQ4847073';
-            const hash = String(idNumber).split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-            return 'TQ' + (hash * 97 % 9000000 + 1000000);
+            if (!idNumber || idNumber === '—') return 'TQ484707';
+            const cleanId = String(idNumber).replace(/\D/g, '');
+            let num;
+            if (cleanId.length >= 6) {
+                num = cleanId.slice(-6);
+            } else if (cleanId.length > 0) {
+                num = cleanId.padStart(6, '0');
+            } else {
+                num = '100000';
+            }
+            return 'TQ' + num;
         }
 
         function formatDateDMY(dateStr) {

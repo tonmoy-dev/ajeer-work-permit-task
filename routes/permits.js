@@ -8,11 +8,16 @@ const db      = require('../db');
 
 // ── Helper: Generate TQ permit number ─────────────────────────
 function generatePermitNumber(idNumber) {
-    const ts   = Date.now().toString().slice(-5);
-    const hash = String(idNumber)
-        .split('')
-        .reduce((a, c) => a + c.charCodeAt(0), 0);
-    const num  = ((hash * 97 + parseInt(ts)) % 9000000) + 1000000;
+    if (!idNumber) return 'TQ' + Math.floor(100000 + Math.random() * 900000);
+    const cleanId = String(idNumber).replace(/\D/g, '');
+    let num;
+    if (cleanId.length >= 6) {
+        num = cleanId.slice(-6);
+    } else if (cleanId.length > 0) {
+        num = cleanId.padStart(6, '0');
+    } else {
+        num = '100000';
+    }
     return 'TQ' + num;
 }
 

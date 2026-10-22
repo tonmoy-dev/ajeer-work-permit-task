@@ -44,16 +44,16 @@
         .header-bar {
             width: 100%;
             background: #ffffff;
-            padding: 1rem 2rem;
+            padding: 0.85rem 1.5rem;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
             border-bottom: 1px solid var(--border-light);
         }
 
         .header-container {
-            max-width: 500px;
+            max-width: 480px;
             width: 100%;
             margin: 0 auto;
             display: flex;
@@ -61,8 +61,25 @@
             align-items: center;
         }
 
-        .brand-logo svg {
+        .header-logo-wrap {
+            display: flex;
+            align-items: center;
+        }
+
+        .verify-header-logo-ministry {
+            height: 38px;
+            max-height: 42px;
+            width: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .verify-header-logo-ajeer {
             height: 36px;
+            max-height: 40px;
+            width: auto;
+            display: block;
+            object-fit: contain;
         }
 
         .lang-btn {
@@ -215,30 +232,44 @@
             width: 100%;
             max-width: 480px;
             text-align: center;
-            padding: 2rem 1rem;
-            margin-top: 2rem;
+            padding: 2rem 1rem 3rem 1rem;
+            margin-top: 1.5rem;
             color: var(--text-muted);
             font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .footer-logo {
             margin-bottom: 1.25rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .footer-logo img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+            display: block;
         }
 
         .footer-links {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.8rem 1.2rem;
-            margin-bottom: 1.5rem;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
             list-style: none;
-            font-size: 0.82rem;
-            color: #64748b;
+            padding: 0;
         }
 
         .footer-links a {
-            color: #64748b;
+            color: #486581;
+            font-weight: 600;
+            font-size: 0.95rem;
             text-decoration: none;
+            transition: color 0.2s;
         }
 
         .footer-links a:hover {
@@ -246,33 +277,42 @@
         }
 
         .copyright-text {
-            color: #94a3b8;
-            font-size: 0.8rem;
-            margin-bottom: 1.25rem;
+            color: #829ab1;
+            font-size: 0.88rem;
+            font-weight: 500;
+            margin-bottom: 1.75rem;
+            direction: rtl;
         }
 
-        .lang-switch-footer {
-            background: transparent;
-            border: none;
-            color: #234380;
-            font-weight: 700;
-            cursor: pointer;
-            margin-bottom: 1.5rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
+        .footer-divider {
+            width: 100%;
+            border-top: 1px solid #e2e8f0;
+            margin-bottom: 1.75rem;
         }
 
         .partner-logos {
             display: flex;
+            direction: ltr;
             justify-content: center;
             align-items: center;
-            gap: 1.5rem;
-            margin-top: 1rem;
+            gap: 2.5rem;
+            width: 100%;
         }
 
-        .partner-logos svg {
+        .partner-logos img {
             height: 38px;
+            max-height: 42px;
+            width: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .partner-logo-ministry {
+            height: 38px;
+        }
+
+        .partner-logo-takamol {
+            height: 36px;
         }
 
         /* Floating Support Button */
@@ -302,13 +342,19 @@
     <!-- Header Bar -->
     <div class="header-bar">
         <div class="header-container">
-            <!-- Ajeer Brand Logo -->
-            <div class="brand-logo">
-                <img src="public/logo-ajeer.png" onerror="this.onerror=null;this.src='logo-ajeer.png';" alt="Ajeer أجير"
-                    style="height: 34px; width: auto; display: block; object-fit: contain;">
+            <!-- Ministry of Human Resources Logo (Right side in RTL) -->
+            <div class="header-logo-wrap">
+                <img src="public/logo-ministry.png" onerror="this.onerror=null;this.src='logo-ministry.png';"
+                    alt="وزارة الموارد البشرية والتنمية الاجتماعية" class="verify-header-logo-ministry">
             </div>
 
-            <!-- Language Switcher -->
+            <!-- Ajeer Brand Logo (Left side in RTL) -->
+            <div class="header-logo-wrap">
+                <img src="public/logo-ajeer.png" onerror="this.onerror=null;this.src='logo-ajeer.png';"
+                    alt="Ajeer أجير" class="verify-header-logo-ajeer">
+            </div>
+
+            <!-- Language Switcher (Hidden) -->
             <button class="lang-btn" style="display:none !important" onclick="toggleLanguage()">
                 <span id="langBtnText">عربى</span> 🌐
             </button>
@@ -395,41 +441,26 @@
     <!-- Verification Footer -->
     <div class="verify-footer">
         <div class="footer-logo">
-            <svg viewBox="0 0 90 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <text x="0" y="24" fill="#1B365D" font-family="'Tajawal', sans-serif" font-weight="bold"
-                    font-size="22">أجير</text>
-            </svg>
+            <img src="public/logo-ajeer.png" onerror="this.onerror=null;this.src='logo-ajeer.png';" alt="Ajeer أجير">
         </div>
 
         <ul class="footer-links">
             <li><a href="#">سياسات الخصوصية</a></li>
             <li><a href="#">الشروط والأحكام</a></li>
-            <li><a href="#">عن التطبيق</a></li>
-            <li><a href="#">الخدمات</a></li>
-            <li><a href="#">قوة</a></li>
-            <li><a href="#">مؤشر سوق العمل</a></li>
-            <li><a href="#">سياسات العمل</a></li>
-            <li><a href="#">المعرفة</a></li>
         </ul>
 
-        <div class="copyright-text">١٤٤٨هـ / أجير حلول الموارد البشرية</div>
+        <div class="copyright-text">١٤٤٦ هـ / © أجير حلول الموارد البشرية</div>
 
-        <button class="lang-switch-footer" style="display:none !important" onclick="toggleLanguage()">
-            <span id="txtFooterLang">English</span> 🌐
-        </button>
+        <div class="footer-divider"></div>
 
         <div class="partner-logos">
-            <!-- Takamol Logo -->
-            <svg viewBox="0 0 100 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <text x="0" y="24" fill="#234380" font-family="'Tajawal', sans-serif" font-weight="bold"
-                    font-size="18">تكامل</text>
-                <text x="50" y="24" fill="#94a3b8" font-family="'Inter', sans-serif" font-weight="600"
-                    font-size="12">Takamol</text>
-            </svg>
-            <!-- Ministry Logo -->
+            <!-- Ministry Logo (Left side) -->
             <img src="public/logo-ministry.png" onerror="this.onerror=null;this.src='logo-ministry.png';"
-                alt="وزارة الموارد البشرية والتنمية الاجتماعية"
-                style="height: 32px; width: auto; display: block; object-fit: contain;">
+                alt="وزارة الموارد البشرية والتنمية الاجتماعية" class="partner-logo-ministry">
+
+            <!-- Takamol Logo (Right side) -->
+            <img src="public/logo-takamol.png" onerror="this.onerror=null;this.src='logo-takamol.png';"
+                alt="تكامل Takamol" class="partner-logo-takamol">
         </div>
     </div>
 
@@ -498,7 +529,9 @@
 
             document.getElementById('txtPageTitle').innerText = t.pageTitle;
             document.getElementById('langBtnText').innerText = t.langBtn;
-            document.getElementById('txtFooterLang').innerText = t.footerLang;
+            if (document.getElementById('txtFooterLang')) {
+                document.getElementById('txtFooterLang').innerText = t.footerLang;
+            }
             document.getElementById('lblPermitInfoTitle').innerText = t.permitInfoTitle;
             document.getElementById('lblEmployeeName').innerText = t.employeeName;
             document.getElementById('lblPermitStatus').innerText = t.permitStatus;
