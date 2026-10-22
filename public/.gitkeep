@@ -1,0 +1,3 @@
+<!-- This file is served by Express from the /public folder -->
+<!-- It is identical to ../index.html — source of truth is ../index.html -->
+<!-- Run: node server.js — then open http://localhost:3000 -->

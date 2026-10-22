@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajeer HRS Permit Verification - التحقق من تصريح أجير</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1b365d;
+            --primary-blue: #234380;
+            --badge-green-bg: #10b981;
+            --badge-green-light: #d1fae5;
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-light: #e2e8f0;
+            --radius-card: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Top Header */
+        .header-bar {
+            width: 100%;
+            background: #ffffff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .header-container {
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo svg {
+            height: 36px;
+        }
+
+        .lang-btn {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #234380;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+
+        .lang-btn:hover {
+            background: #f8fafc;
+            border-color: #94a3b8;
+        }
+
+        /* Main Content Container */
+        .content-container {
+            max-width: 480px;
+            width: 100%;
+            padding: 1.5rem 1rem;
+            flex: 1;
+        }
+
+        .page-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        [dir="rtl"] .page-title {
+            text-align: right;
+        }
+
+        /* Permit Cards Layout */
+        .permit-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-card);
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-light);
+        }
+
+        .card-header-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #234380;
+            margin-bottom: 1rem;
+        }
+
+        .info-group {
+            margin-bottom: 0.9rem;
+        }
+
+        .info-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+        }
+
+        .info-val {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.25rem 0.9rem;
+            border-radius: 6px;
+            margin-top: 0.25rem;
+        }
+
+        .status-badge.active {
+            background: var(--badge-green-bg);
+        }
+
+        .status-badge.expired {
+            background: #ef4444;
+        }
+
+        /* Copy Button */
+        .btn-copy-link {
+            width: 100%;
+            background: #234380;
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 12px rgba(35, 67, 128, 0.25);
+            transition: all 0.2s;
+        }
+
+        .btn-copy-link:hover {
+            background: #1b365d;
+            transform: translateY(-1px);
+        }
+
+        /* Toast Popup */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1e293b;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Footer Section */
+        .verify-footer {
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 2rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .footer-logo {
+            margin-bottom: 1.25rem;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem 1.2rem;
+            margin-bottom: 1.5rem;
+            list-style: none;
+            font-size: 0.82rem;
+            color: #64748b;
+        }
+
+        .footer-links a {
+            color: #64748b;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .copyright-text {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .lang-switch-footer {
+            background: transparent;
+            border: none;
+            color: #234380;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .partner-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .partner-logos svg {
+            height: 38px;
+        }
+
+        /* Floating Support Button */
+        .floating-help-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 48px;
+            height: 48px;
+            background: #234380;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+            cursor: pointer;
+            z-index: 999;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="header-container">
+            <!-- Ajeer Brand Logo -->
+            <div class="brand-logo">
+                <img src="public/logo-ajeer.png" onerror="this.onerror=null;this.src='logo-ajeer.png';" alt="Ajeer أجير"
+                    style="height: 34px; width: auto; display: block; object-fit: contain;">
+            </div>
+
+            <!-- Language Switcher -->
+            <button class="lang-btn" onclick="toggleLanguage()">
+                <span id="langBtnText">عربى</span> 🌐
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Verification Cards View -->
+    <div class="content-container">
+
+        <h1 class="page-title" id="txtPageTitle">Ajeer HRS Permit</h1>
+
+        <!-- Card 1: Permit Information -->
+        <div class="permit-card">
+            <div class="card-header-title" id="lblPermitInfoTitle">Permit Information</div>
+
+            <div class="info-group">
+                <div class="info-label" id="lblEmployeeName">Employee Name:</div>
+                <div class="info-val" id="valEmployeeName">MD KHAIRUL ISLAM</div>
+            </div>
+
+            <div class="info-group">
+                <div class="info-label" id="lblPermitStatus">Permit Status:</div>
+                <div><span class="status-badge" id="valPermitStatus">Active</span></div>
+            </div>
+
+            <div class="info-group" style="margin-top: 0.9rem;">
+                <div class="info-label" id="lblPermitStart">Permit Start Date:</div>
+                <div class="info-val" id="valPermitStart">10/10/2026</div>
+            </div>
+
+            <div class="info-group">
+                <div class="info-label" id="lblPermitEnd">Permit End Date:</div>
+                <div class="info-val" id="valPermitEnd">09/04/2027</div>
+            </div>
+
+            <div class="info-group">
+                <div class="info-label" id="lblContractDesc">Contract Description:</div>
+                <div class="info-val" id="valContractDesc">Joint cooperation between the two companies</div>
+            </div>
+
+            <div class="info-group">
+                <div class="info-label" id="lblWorkLocation">Work Location:</div>
+                <div class="info-val" id="valWorkLocation">الرياض، المملكة العربية السعودية</div>
+            </div>
+        </div>
+
+        <!-- Card 2: Recruitment Company (شركة الإستقدام) -->
+        <div class="permit-card">
+            <div class="card-header-title" id="lblRecruitmentTitle">Recruitment Company (شركة الإستقدام)</div>
+
+            <div class="info-group">
+                <div class="info-label" id="lblFacilityName">Facility Name:</div>
+                <div class="info-val" id="valFacilityName">مؤسسة منيف عبد الله حسين الدوسري للتاجر</div>
+            </div>
+
+            <div class="info-group">
+                <div class="info-label" id="lblFacilityNumber">Facility Number:</div>
+                <div class="info-val" id="valFacilityNumber">2-2-681349</div>
+            </div>
+        </div>
+
+        <!-- Card 3: Beneficiary (المنشأة المستفيدة) -->
+        <div class="permit-card">
+            <div class="card-header-title" id="lblBeneficiaryTitle">Beneficiary Facility (المنشأة المستفيدة)</div>
+
+            <div class="info-group">
+                <div class="info-label" id="lblCompanyName">Company Name:</div>
+                <div class="info-val" id="valCompanyName">مؤسسة مهارت الانجاز للمقاولات</div>
+            </div>
+
+            <div class="info-group">
+                <div class="info-label" id="lblCompanyNumber">Company Number:</div>
+                <div class="info-val" id="valCompanyNumber">1-4242031</div>
+            </div>
+        </div>
+
+        <!-- Copy Button -->
+        <button class="btn-copy-link" onclick="copyPageLink()">
+            <span id="txtCopyBtn">Copy Page Link</span> 🔗
+        </button>
+
+    </div>
+
+    <!-- Verification Footer -->
+    <div class="verify-footer">
+        <div class="footer-logo">
+            <svg viewBox="0 0 90 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <text x="0" y="24" fill="#1B365D" font-family="'Tajawal', sans-serif" font-weight="bold"
+                    font-size="22">أجير</text>
+            </svg>
+        </div>
+
+        <ul class="footer-links">
+            <li><a href="#">سياسات الخصوصية</a></li>
+            <li><a href="#">الشروط والأحكام</a></li>
+            <li><a href="#">عن التطبيق</a></li>
+            <li><a href="#">الخدمات</a></li>
+            <li><a href="#">قوة</a></li>
+            <li><a href="#">مؤشر سوق العمل</a></li>
+            <li><a href="#">سياسات العمل</a></li>
+            <li><a href="#">المعرفة</a></li>
+        </ul>
+
+        <div class="copyright-text">١٤٤٨هـ / أجير حلول الموارد البشرية</div>
+
+        <button class="lang-switch-footer" onclick="toggleLanguage()">
+            <span id="txtFooterLang">English</span> 🌐
+        </button>
+
+        <div class="partner-logos">
+            <!-- Takamol Logo -->
+            <svg viewBox="0 0 100 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <text x="0" y="24" fill="#234380" font-family="'Tajawal', sans-serif" font-weight="bold"
+                    font-size="18">تكامل</text>
+                <text x="50" y="24" fill="#94a3b8" font-family="'Inter', sans-serif" font-weight="600"
+                    font-size="12">Takamol</text>
+            </svg>
+            <!-- Ministry Logo -->
+            <img src="public/logo-ministry.png" onerror="this.onerror=null;this.src='logo-ministry.png';"
+                alt="وزارة الموارد البشرية والتنمية الاجتماعية"
+                style="height: 32px; width: auto; display: block; object-fit: contain;">
+        </div>
+    </div>
+
+    <!-- Floating "?" Support Button -->
+    <!-- <div class="floating-help-btn" onclick="alert('منصة أجير: خدمة التحقق التلقائي من صحة وسريان تصاريح العمل.')">؟</div> -->
+
+    <!-- Toast Popup Notification -->
+    <div class="toast" id="toastMsg">Page link copied to clipboard!</div>
+
+    <script>
+        let currentLang = localStorage.getItem('ajeer_lang') || 'ar';
+
+        const i18n = {
+            en: {
+                pageTitle: "Ajeer HRS Permit",
+                langBtn: "عربى",
+                footerLang: "عربى",
+                permitInfoTitle: "Permit Information",
+                employeeName: "Employee Name:",
+                permitStatus: "Permit Status:",
+                active: "Active",
+                expired: "Expired",
+                permitStart: "Permit Start Date:",
+                permitEnd: "Permit End Date:",
+                contractDesc: "Contract Description:",
+                workLocation: "Work Location:",
+                beneficiaryTitle: "Beneficiary Facility",
+                facilityName: "Facility Name:",
+                facilityNumber: "Facility Number:",
+                recruitmentTitle: "Recruitment Company (شركة الإستقدام)",
+                companyName: "Company Name:",
+                companyNumber: "Company Number:",
+                copyBtn: "Copy Page Link",
+                toastCopied: "Page link copied to clipboard!"
+            },
+            ar: {
+                pageTitle: "تصريح أجير - تعاقد أجير",
+                langBtn: "English",
+                footerLang: "English",
+                permitInfoTitle: "بيانات التصريح",
+                employeeName: "اسم الموظف:",
+                permitStatus: "حالة التصريح:",
+                active: "نشط",
+                expired: "منتهي",
+                permitStart: "تاريخ بداية التصريح:",
+                permitEnd: "تاريخ إنتهاء التصريح:",
+                contractDesc: "نبذة عن التعاقد:",
+                workLocation: "مواقع العمل:",
+                beneficiaryTitle: "المنشأة المستفيدة",
+                facilityName: "اسم المنشأة:",
+                facilityNumber: "رقم المنشأة:",
+                recruitmentTitle: "شركة الإستقدام",
+                companyName: "اسم الشركة:",
+                companyNumber: "رقم الشركة:",
+                copyBtn: "نسخ رابط الصفحة",
+                toastCopied: "تم نسخ رابط الصفحة إلى الحافظة!"
+            }
+        };
+
+        function applyLanguage(lang) {
+            currentLang = lang;
+            const t = i18n[lang] || i18n.ar;
+
+            document.documentElement.dir = (lang === 'ar' ? 'rtl' : 'ltr');
+            document.documentElement.lang = lang;
+
+            document.getElementById('txtPageTitle').innerText = t.pageTitle;
+            document.getElementById('langBtnText').innerText = t.langBtn;
+            document.getElementById('txtFooterLang').innerText = t.footerLang;
+            document.getElementById('lblPermitInfoTitle').innerText = t.permitInfoTitle;
+            document.getElementById('lblEmployeeName').innerText = t.employeeName;
+            document.getElementById('lblPermitStatus').innerText = t.permitStatus;
+
+            // Re-render status badge with correct language text
+            const badge = document.getElementById('valPermitStatus');
+            if (badge) {
+                const isExpired = badge.dataset.expired === 'true';
+                badge.innerText = isExpired ? t.expired : t.active;
+                badge.className = 'status-badge ' + (isExpired ? 'expired' : 'active');
+            }
+
+            document.getElementById('lblPermitStart').innerText = t.permitStart;
+            document.getElementById('lblPermitEnd').innerText = t.permitEnd;
+            document.getElementById('lblContractDesc').innerText = t.contractDesc;
+            document.getElementById('lblWorkLocation').innerText = t.workLocation;
+            document.getElementById('lblBeneficiaryTitle').innerText = t.beneficiaryTitle;
+            document.getElementById('lblFacilityName').innerText = t.facilityName;
+            document.getElementById('lblFacilityNumber').innerText = t.facilityNumber;
+            document.getElementById('lblRecruitmentTitle').innerText = t.recruitmentTitle;
+            document.getElementById('lblCompanyName').innerText = t.companyName;
+            document.getElementById('lblCompanyNumber').innerText = t.companyNumber;
+            document.getElementById('txtCopyBtn').innerText = t.copyBtn;
+        }
+
+        function toggleLanguage() {
+            const nextLang = (currentLang === 'ar' ? 'en' : 'ar');
+            localStorage.setItem('ajeer_lang', nextLang);
+            applyLanguage(nextLang);
+        }
+
+        function renderPermitDetails(data) {
+            document.getElementById('valEmployeeName').innerText = data.laborerName;
+
+            // Format dates as DD/MM/YYYY
+            const formatDate = (dateStr) => {
+                if (!dateStr) return '';
+                if (dateStr.includes('/')) return dateStr; // already formatted
+                const parts = dateStr.split('-');
+                if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+                return dateStr;
+            };
+
+            document.getElementById('valPermitStart').innerText = formatDate(data.startDate);
+            document.getElementById('valPermitEnd').innerText = formatDate(data.endDate);
+            document.getElementById('valContractDesc').innerText = data.contractDesc || '-';
+            document.getElementById('valWorkLocation').innerText = data.workLocation || '-';
+
+            // Smart status: compare endDate to today (live check)
+            const badge = document.getElementById('valPermitStatus');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const endDate = data.endDate ? new Date(data.endDate) : null;
+            const isExpired = endDate && endDate < today;
+            badge.dataset.expired = isExpired ? 'true' : 'false';
+            badge.innerText = isExpired ? i18n[currentLang].expired : i18n[currentLang].active;
+            badge.className = 'status-badge ' + (isExpired ? 'expired' : 'active');
+
+            document.getElementById('valFacilityName').innerText = data.providerName;
+            document.getElementById('valFacilityNumber').innerText = data.providerNum;
+            document.getElementById('valCompanyName').innerText = data.beneficiaryName;
+            document.getElementById('valCompanyNumber').innerText = data.beneficiaryNum;
+        }
+
+        async function loadPermitDetails() {
+            applyLanguage(currentLang);
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const idParam = urlParams.get('id');
+
+            const defaultData = {
+                laborerName: "MD KHAIRUL ISLAM",
+                occupation: "عامل تحميل وتنزيل",
+                idNumber: "2602301927",
+                startDate: "2026-10-10",
+                endDate: "2027-04-09",
+                contractDesc: "Joint cooperation between the two companies",
+                workLocation: "الرياض، المملكة العربية السعودية",
+                providerName: "مؤسسة منيف عبد الله حسين الدوسري للتاجر",
+                providerNum: "2-2-681349",
+                beneficiaryName: "مؤسسة مهارت الانجاز للمقاولات",
+                beneficiaryNum: "1-4242031"
+            };
+
+            // 1️⃣ Try server API (works from any device — the real fix for QR scanning)
+            if (idParam) {
+                try {
+                    const resp = await fetch(`/api/permits/by-id/${encodeURIComponent(idParam)}`);
+                    if (resp.ok) {
+                        const result = await resp.json();
+                        // Cache locally so offline still works
+                        localStorage.setItem('permit_' + idParam, JSON.stringify(result.permit));
+                        return renderPermitDetails(result.permit);
+                    } else if (resp.status === 404) {
+                        // Permit not in DB — show warning
+                        showNotFoundWarning(idParam);
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('⚠️ API unavailable, using localStorage fallback:', e.message);
+                }
+            }
+
+            // 2️⃣ localStorage fallback (works when server is off / static file mode)
+            let data = null;
+            if (idParam) {
+                const s = localStorage.getItem('permit_' + idParam);
+                if (s) data = JSON.parse(s);
+            }
+            if (!data) {
+                const s = localStorage.getItem('currentPermitData');
+                if (s) data = JSON.parse(s);
+            }
+            if (!data) data = defaultData;
+
+            renderPermitDetails(data);
+        }
+
+        function showNotFoundWarning(idParam) {
+            // Show a clear "not found / invalid" state on the page
+            document.getElementById('valEmployeeName').innerText = '—';
+            const badge = document.getElementById('valPermitStatus');
+            badge.innerText = 'Invalid / Not Found';
+            badge.className = 'status-badge expired';
+            badge.dataset.expired = 'true';
+            document.getElementById('valPermitStart').innerText = '—';
+            document.getElementById('valPermitEnd').innerText = '—';
+            document.getElementById('valContractDesc').innerText = '—';
+            document.getElementById('valWorkLocation').innerText = '—';
+            document.getElementById('valFacilityName').innerText = '—';
+            document.getElementById('valFacilityNumber').innerText = '—';
+            document.getElementById('valCompanyName').innerText = '—';
+            document.getElementById('valCompanyNumber').innerText = '—';
+
+            // Show alert banner
+            const banner = document.createElement('div');
+            banner.style.cssText = `
+                background:#fef2f2;border:1.5px solid #ef4444;color:#b91c1c;
+                padding:1rem 1.25rem;border-radius:10px;margin-bottom:1rem;
+                font-weight:700;font-size:0.95rem;text-align:center;
+            `;
+            banner.innerHTML = `⚠️ Permit not found or may have been tampered with.<br>
+                <small style="font-weight:400">ID: ${idParam}</small>`;
+            const container = document.querySelector('.content-container');
+            container.insertBefore(banner, container.firstChild.nextSibling);
+        }
+
+        function copyPageLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                showToast(i18n[currentLang].toastCopied);
+            }).catch(() => {
+                showToast(i18n[currentLang].toastCopied);
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastMsg');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        window.addEventListener('DOMContentLoaded', loadPermitDetails);
+    </script>
+</body>
+
+</html>

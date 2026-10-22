@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajeer Permit Generator - نظام تصاريح أجير</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1b365d;
+            --primary-hover: #142847;
+            --accent: #00a884;
+            --bg-main: #f4f7f9;
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: #ffffff;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+
+        .brand-logo svg { height: 38px; }
+
+        .badge-demo {
+            background: #e0f2fe;
+            color: #0369a1;
+            font-size: 0.85rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .lang-btn {
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            padding: 0.45rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+            font-family: 'Inter', 'Tajawal', sans-serif;
+        }
+
+        .lang-btn:hover {
+            background: #f8fafc;
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* LTR Directional Adaptations */
+        html[dir="ltr"] .form-header-top { direction: ltr; }
+        html[dir="ltr"] .form-section-header { direction: ltr; }
+        html[dir="ltr"] .form-group label { text-align: left; }
+        html[dir="ltr"] .form-title-group { text-align: left; }
+        html[dir="ltr"] .brand-logo { direction: ltr; }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, #2a4d7c 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        .hero-banner h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .hero-banner p { color: #cbd5e1; font-size: 1rem; }
+
+        .form-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .form-title-group h2 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .form-title-group p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .form-actions-top {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn-demo-sample {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #eef2ff;
+            color: #1b365d;
+            border: 1.5px solid #cbd5e1;
+            padding: 0.55rem 1.1rem;
+            border-radius: 8px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            font-family: 'Tajawal', 'Inter', sans-serif;
+        }
+
+        .btn-demo-sample:hover {
+            background: #1b365d;
+            color: #ffffff;
+            border-color: #1b365d;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(27, 54, 93, 0.25);
+        }
+
+        .btn-demo-sample svg {
+            transition: transform 0.2s;
+        }
+
+        .btn-demo-sample:hover svg {
+            transform: scale(1.1);
+        }
+
+        .btn-clear-form {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px dashed #cbd5e1;
+            padding: 0.55rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Tajawal', 'Inter', sans-serif;
+        }
+
+        .btn-clear-form:hover {
+            background: #fee2e2;
+            color: #b91c1c;
+            border-color: #fca5a5;
+        }
+
+        @keyframes fieldHighlight {
+            0% { background-color: #dbeafe; }
+            100% { background-color: #ffffff; }
+        }
+
+        .flash-highlight {
+            animation: fieldHighlight 0.7s ease-out;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1b365d;
+            color: white;
+            padding: 0.8rem 1.6rem;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            direction: rtl;
+        }
+
+        .toast-notification.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .form-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-section-header {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group label span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-right: 4px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 0.75rem 1rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            outline: none;
+            font-family: 'Tajawal', 'Inter', sans-serif;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(27, 54, 93, 0.1);
+        }
+
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            box-shadow: var(--shadow-md);
+            font-family: 'Tajawal', 'Inter', sans-serif;
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 3rem;
+            background: white;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .hero-banner { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo-group">
+                <a href="#" class="brand-logo">
+                    <img src="public/logo-ajeer.png" onerror="this.onerror=null;this.src='logo-ajeer.png';" alt="Ajeer أجير" style="height: 38px; width: auto; display: block; object-fit: contain;">
+                </a>
+                <span class="badge-demo" id="txtBadgeDemo">منصة تصاريح العمل (Ajeer Prototype)</span>
+            </div>
+            <!-- Language Switcher Button -->
+            <button type="button" class="lang-btn" id="headerLangBtn" onclick="toggleLanguage()" title="تغيير اللغة / Switch Language">
+                <span id="langBtnText">English</span> 🌐
+            </button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="hero-banner">
+            <h1 id="txtHeroTitle">تصريح أجير</h1>
+            <p id="txtHeroDesc">أدخل بيانات التصريح لإصدار الوثيقة وتفعيل رمز QR، أو اضغط على أيقونة النموذج التجريبي لاختبار الإرسال مباشرة</p>
+        </div>
+
+        <!-- Form -->
+        <div class="form-card">
+            <!-- Form Header with Demo Sample Action -->
+            <div class="form-header-top">
+                <div class="form-title-group">
+                    <h2 id="txtFormCardTitle">إدخال بيانات التصريح (Permit Details)</h2>
+                    <p id="txtFormCardSubtitle">قم بتعبئة بيانات العامل والمنشآت لإصدار تصريح عمل معتمد</p>
+                </div>
+                <div class="form-actions-top">
+                    <button type="button" class="btn-demo-sample" id="btnDemoSample" onclick="loadSampleData()" title="تعبئة نموذج تجريبي لاختبار الإرسال (Load Demo Sample)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        <span id="txtDemoSampleBtn">نموذج تجريبي (Demo Sample)</span>
+                    </button>
+                    <button type="button" class="btn-clear-form" id="btnClearForm" onclick="clearFormData()" title="مسح الحقول (Clear Fields)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                        <span id="txtClearFormBtn">مسح</span>
+                    </button>
+                </div>
+            </div>
+
+            <form id="permitForm" onsubmit="handleFormSubmit(event)">
+
+                <!-- Laborer Section -->
+                <div class="form-section-header" id="secLaborer">👤 بيانات العامل (Laborer Information)</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="laborerName" id="lblLaborerName">اسم العامل <span>(Laborer Name)</span></label>
+                        <input type="text" id="laborerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="occupation" id="lblOccupation">المهنة <span>(Occupation)</span></label>
+                        <input type="text" id="occupation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="idNumber" id="lblIdNumber">رقم الهوية / الإقامة <span>(ID / Iqama)</span></label>
+                        <input type="text" id="idNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nationality" id="lblNationality">الجنسية <span>(Nationality)</span></label>
+                        <input type="text" id="nationality" required>
+                    </div>
+                </div>
+
+                <!-- Recruitment Company Section -->
+                <div class="form-section-header" id="secProvider">🏢 شركة الإستقدام (Recruitment Company)</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="providerName" id="lblProviderName">المنشأة المقدمة للخدمة <span>(Provider)</span></label>
+                        <input type="text" id="providerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="providerNum" id="lblProviderNum">رقم المنشأة <span>(Est. Number)</span></label>
+                        <input type="text" id="providerNum" required>
+                    </div>
+                </div>
+
+                <!-- Beneficiary Section -->
+                <div class="form-section-header" id="secBeneficiary">🏛️ المنشأة المستفيدة (Beneficiary)</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="beneficiaryName" id="lblBeneficiaryName">المنشأة المستفيدة من الخدمة <span>(Beneficiary)</span></label>
+                        <input type="text" id="beneficiaryName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="beneficiaryNum" id="lblBeneficiaryNum">رقم المنشأة <span>(Est. Number)</span></label>
+                        <input type="text" id="beneficiaryNum" required>
+                    </div>
+                </div>
+
+                <!-- Permit / Contract Info Section -->
+                <div class="form-section-header" id="secPermit">📅 بيانات التصريح (Permit & Contract Info)</div>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="contractDesc" id="lblContractDesc">نبذة عن التعاقد <span>(Contract Description)</span></label>
+                        <textarea id="contractDesc" rows="2" placeholder="e.g. Joint cooperation between the two companies"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="startDate" id="lblStartDate">تاريخ بداية التصريح <span>(Start Date)</span></label>
+                        <input type="date" id="startDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate" id="lblEndDate">تاريخ إنتهاء التصريح <span>(End Date)</span></label>
+                        <input type="date" id="endDate" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="workLocation" id="lblWorkLocation">مواقع العمل <span>(Work Location)</span></label>
+                        <input type="text" id="workLocation" placeholder="e.g. الرياض، المملكة العربية السعودية">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="btnSubmit">
+                    📄 إرسال وإصدار وثيقة التصريح
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <span id="txtFooter">جميع الحقوق محفوظة © 2026 - نظام أجير لحلول الموارد البشرية | وزارة الموارد البشرية والتنمية الاجتماعية</span>
+    </footer>
+
+    <script>
+        function generatePermitNumber(idNumber) {
+            const hash = String(idNumber).split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+            return 'TQ' + (hash * 97 % 9000000 + 1000000);
+        }
+
+        // Single demo dataset to test form submission
+        const demoSample = {
+            laborerName: "MD KHAIRUL ISLAM",
+            occupation: "عامل تحميل وتنزيل",
+            idNumber: "2602301927",
+            nationality: "بنجلاديش",
+            providerName: "مؤسسة منيف عبد الله حسين الدوسري للتاجر",
+            providerNum: "2-2-681349",
+            beneficiaryName: "مؤسسة مهارت الانجاز للمقاولات",
+            beneficiaryNum: "1-4242031",
+            contractDesc: "Joint cooperation between the two companies",
+            startDate: "2026-10-10",
+            endDate: "2027-04-09",
+            workLocation: "الرياض، المملكة العربية السعودية"
+        };
+
+        // ── i18n Translation Dictionary ────────────────────────────────
+        let currentLang = localStorage.getItem('ajeer_lang') || 'ar';
+
+        const i18n = {
+            ar: {
+                docTitle: "Ajeer Permit Generator - نظام تصاريح أجير",
+                langBtnText: "English",
+                badgeDemo: "منصة تصاريح العمل (Ajeer Prototype)",
+                heroTitle: "تصريح أجير",
+                heroDesc: "أدخل بيانات التصريح لإصدار الوثيقة وتفعيل رمز QR، أو اضغط على أيقونة النموذج التجريبي لاختبار الإرسال مباشرة",
+                formCardTitle: "إدخال بيانات التصريح (Permit Details)",
+                formCardSubtitle: "قم بتعبئة بيانات العامل والمنشآت لإصدار تصريح عمل معتمد",
+                demoSampleBtn: "نموذج تجريبي (Demo Sample)",
+                clearFormBtn: "مسح",
+                secLaborer: "👤 بيانات العامل (Laborer Information)",
+                lblLaborerName: "اسم العامل <span>(Laborer Name)</span>",
+                lblOccupation: "المهنة <span>(Occupation)</span>",
+                lblIdNumber: "رقم الهوية / الإقامة <span>(ID / Iqama)</span>",
+                lblNationality: "الجنسية <span>(Nationality)</span>",
+                secProvider: "🏢 شركة الإستقدام (Recruitment Company)",
+                lblProviderName: "المنشأة المقدمة للخدمة <span>(Provider)</span>",
+                lblProviderNum: "رقم المنشأة <span>(Est. Number)</span>",
+                secBeneficiary: "🏛️ المنشأة المستفيدة (Beneficiary)",
+                lblBeneficiaryName: "المنشأة المستفيدة من الخدمة <span>(Beneficiary)</span>",
+                lblBeneficiaryNum: "رقم المنشأة <span>(Est. Number)</span>",
+                secPermit: "📅 بيانات التصريح (Permit & Contract Info)",
+                lblContractDesc: "نبذة عن التعاقد <span>(Contract Description)</span>",
+                contractDescPlaceholder: "مثال: تعاون مشترك بين الطرفين لتقديم الخدمات العمالية",
+                lblStartDate: "تاريخ بداية التصريح <span>(Start Date)</span>",
+                lblEndDate: "تاريخ إنتهاء التصريح <span>(End Date)</span>",
+                lblWorkLocation: "مواقع العمل <span>(Work Location)</span>",
+                workLocationPlaceholder: "الرياض، المملكة العربية السعودية",
+                btnSubmit: "📄 إرسال وإصدار وثيقة التصريح",
+                btnSubmitting: "⏳ جاري إرسال وإصدار الوثيقة...",
+                footerText: "جميع الحقوق محفوظة © 2026 - نظام أجير لحلول الموارد البشرية | وزارة الموارد البشرية والتنمية الاجتماعية",
+                toastSampleLoaded: "✓ تم تعبئة النموذج بالبيانات التجريبية بنجاح",
+                toastCleared: "تم مسح جميع الحقول"
+            },
+            en: {
+                docTitle: "Ajeer Permit Generator - HRS Permit System",
+                langBtnText: "عربى",
+                badgeDemo: "Work Permit Platform (Ajeer Prototype)",
+                heroTitle: "Ajeer Permit",
+                heroDesc: "Enter permit information to issue the official permit document with QR code, or use Demo Sample to test submission.",
+                formCardTitle: "Permit Information",
+                formCardSubtitle: "Fill in laborer and establishment details to issue a certified permit",
+                demoSampleBtn: "Demo Sample",
+                clearFormBtn: "Clear",
+                secLaborer: "👤 Laborer Information",
+                lblLaborerName: "Laborer Name",
+                lblOccupation: "Occupation",
+                lblIdNumber: "ID / Iqama Number",
+                lblNationality: "Nationality",
+                secProvider: "🏢 Recruitment Company (Service Provider)",
+                lblProviderName: "Provider Establishment Name",
+                lblProviderNum: "Establishment Number",
+                secBeneficiary: "🏛️ Beneficiary Establishment",
+                lblBeneficiaryName: "Beneficiary Facility Name",
+                lblBeneficiaryNum: "Establishment Number",
+                secPermit: "📅 Permit & Contract Information",
+                lblContractDesc: "Contract Description",
+                contractDescPlaceholder: "e.g. Joint cooperation between the two companies for labor supply",
+                lblStartDate: "Permit Start Date",
+                lblEndDate: "Permit End Date",
+                lblWorkLocation: "Work Location",
+                workLocationPlaceholder: "Riyadh, Kingdom of Saudi Arabia",
+                btnSubmit: "📄 Submit & Generate permit document",
+                btnSubmitting: "⏳ Submitting & Generating Permit Document...",
+                footerText: "All Rights Reserved © 2026 - Ajeer HR Solutions | Ministry of Human Resources & Social Development",
+                toastSampleLoaded: "✓ Demo sample data loaded successfully",
+                toastCleared: "Form cleared"
+            }
+        };
+
+        function applyLanguage(lang) {
+            currentLang = lang;
+            const t = i18n[lang] || i18n.ar;
+
+            document.documentElement.dir = (lang === 'ar' ? 'rtl' : 'ltr');
+            document.documentElement.lang = lang;
+            document.title = t.docTitle;
+
+            document.getElementById('langBtnText').innerText = t.langBtnText;
+            document.getElementById('txtBadgeDemo').innerText = t.badgeDemo;
+            document.getElementById('txtHeroTitle').innerText = t.heroTitle;
+            document.getElementById('txtHeroDesc').innerText = t.heroDesc;
+            document.getElementById('txtFormCardTitle').innerText = t.formCardTitle;
+            document.getElementById('txtFormCardSubtitle').innerText = t.formCardSubtitle;
+            document.getElementById('txtDemoSampleBtn').innerText = t.demoSampleBtn;
+            document.getElementById('txtClearFormBtn').innerText = t.clearFormBtn;
+
+            document.getElementById('secLaborer').innerText = t.secLaborer;
+            document.getElementById('lblLaborerName').innerHTML = t.lblLaborerName;
+            document.getElementById('lblOccupation').innerHTML = t.lblOccupation;
+            document.getElementById('lblIdNumber').innerHTML = t.lblIdNumber;
+            document.getElementById('lblNationality').innerHTML = t.lblNationality;
+
+            document.getElementById('secProvider').innerText = t.secProvider;
+            document.getElementById('lblProviderName').innerHTML = t.lblProviderName;
+            document.getElementById('lblProviderNum').innerHTML = t.lblProviderNum;
+
+            document.getElementById('secBeneficiary').innerText = t.secBeneficiary;
+            document.getElementById('lblBeneficiaryName').innerHTML = t.lblBeneficiaryName;
+            document.getElementById('lblBeneficiaryNum').innerHTML = t.lblBeneficiaryNum;
+
+            document.getElementById('secPermit').innerText = t.secPermit;
+            document.getElementById('lblContractDesc').innerHTML = t.lblContractDesc;
+            document.getElementById('contractDesc').placeholder = t.contractDescPlaceholder;
+            document.getElementById('lblStartDate').innerHTML = t.lblStartDate;
+            document.getElementById('lblEndDate').innerHTML = t.lblEndDate;
+            document.getElementById('lblWorkLocation').innerHTML = t.lblWorkLocation;
+            document.getElementById('workLocation').placeholder = t.workLocationPlaceholder;
+
+            document.getElementById('btnSubmit').innerText = t.btnSubmit;
+            document.getElementById('txtFooter').innerText = t.footerText;
+        }
+
+        function toggleLanguage() {
+            const nextLang = (currentLang === 'ar' ? 'en' : 'ar');
+            localStorage.setItem('ajeer_lang', nextLang);
+            applyLanguage(nextLang);
+        }
+
+        function loadSampleData() {
+            document.getElementById('laborerName').value     = demoSample.laborerName;
+            document.getElementById('occupation').value      = demoSample.occupation;
+            document.getElementById('idNumber').value        = demoSample.idNumber;
+            document.getElementById('nationality').value     = demoSample.nationality;
+            document.getElementById('providerName').value    = demoSample.providerName;
+            document.getElementById('providerNum').value     = demoSample.providerNum;
+            document.getElementById('beneficiaryName').value  = demoSample.beneficiaryName;
+            document.getElementById('beneficiaryNum').value   = demoSample.beneficiaryNum;
+            document.getElementById('contractDesc').value    = demoSample.contractDesc;
+            document.getElementById('startDate').value       = demoSample.startDate;
+            document.getElementById('endDate').value         = demoSample.endDate;
+            document.getElementById('workLocation').value    = demoSample.workLocation;
+
+            // Flash inputs to give visual confirmation
+            const inputs = document.querySelectorAll('#permitForm input, #permitForm textarea');
+            inputs.forEach(el => {
+                el.classList.remove('flash-highlight');
+                void el.offsetWidth;
+                el.classList.add('flash-highlight');
+            });
+
+            const t = i18n[currentLang] || i18n.ar;
+            showToast(t.toastSampleLoaded);
+        }
+
+        function clearFormData() {
+            document.getElementById('permitForm').reset();
+            const t = i18n[currentLang] || i18n.ar;
+            showToast(t.toastCleared);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastNotification');
+            if (!toast) return;
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        // Initialize saved language on load
+        window.addEventListener('DOMContentLoaded', () => {
+            applyLanguage(currentLang);
+        });
+
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const t = i18n[currentLang] || i18n.ar;
+            const btn = document.querySelector('.btn-submit');
+            btn.innerHTML = t.btnSubmitting;
+            btn.disabled = true;
+
+            const idVal = document.getElementById('idNumber').value.trim();
+            const formPayload = {
+                laborerName:     document.getElementById('laborerName').value.trim(),
+                occupation:      document.getElementById('occupation').value.trim(),
+                idNumber:        idVal,
+                nationality:     document.getElementById('nationality').value.trim(),
+                providerName:    document.getElementById('providerName').value.trim(),
+                providerNum:     document.getElementById('providerNum').value.trim(),
+                beneficiaryName: document.getElementById('beneficiaryName').value.trim(),
+                beneficiaryNum:  document.getElementById('beneficiaryNum').value.trim(),
+                contractDesc:    document.getElementById('contractDesc').value.trim(),
+                startDate:       document.getElementById('startDate').value,
+                endDate:         document.getElementById('endDate').value,
+                workLocation:    document.getElementById('workLocation').value.trim()
+            };
+
+            try {
+                // ── Try server API first ──────────────────────────────────
+                const response = await fetch('/api/permits', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formPayload)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    const permit = result.permit;
+                    // Also cache in localStorage as backup
+                    localStorage.setItem('permit_' + permit.idNumber, JSON.stringify(permit));
+                    localStorage.setItem('currentPermitData', JSON.stringify(permit));
+                    window.location.href = `document.html?id=${encodeURIComponent(permit.idNumber)}`;
+                    return;
+                } else {
+                    const err = await response.json();
+                    throw new Error(err.error || 'Server error');
+                }
+            } catch (err) {
+                console.warn('⚠️ Server unavailable, using localStorage fallback:', err.message);
+                // ── Fallback: localStorage only (static file mode) ────────
+                const permitData = {
+                    ...formPayload,
+                    id: idVal,
+                    permitNumber: generatePermitNumber(idVal)
+                };
+                localStorage.setItem('permit_' + idVal, JSON.stringify(permitData));
+                localStorage.setItem('currentPermitData', JSON.stringify(permitData));
+                window.location.href = `document.html?id=${encodeURIComponent(idVal)}`;
+            }
+        }
+    </script>
+
+    <!-- Floating Toast Notification -->
+    <div id="toastNotification" class="toast-notification"></div>
+</body>
+</html>

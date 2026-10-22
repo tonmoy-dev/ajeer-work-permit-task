@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تصريح أجير - تعاقد أجير | Ajeer HRS Permit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1b365d;
+            --border-color: #94a3b8;
+            --bg-table-title: #f1f5f9;
+            --bg-table-label: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #e2e8f0;
+            color: #000000;
+            line-height: 1.5;
+            padding: 20px 0;
+        }
+
+        /* ── External Toolbar (Screen view only) ── */
+        .toolbar-actions {
+            max-width: 210mm;
+            margin: 0 auto 15px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-tool {
+            padding: 8px 16px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            font-family: 'Tajawal', 'Inter', sans-serif;
+        }
+
+        .btn-back {
+            background: #64748b;
+            color: white;
+        }
+
+        .btn-print {
+            background: #1b365d;
+            color: white;
+        }
+
+        .btn-verify {
+            background: #00a884;
+            color: white;
+        }
+
+        .btn-lang {
+            background: #ffffff;
+            color: #1b365d;
+            border: 1.5px solid #cbd5e1;
+        }
+
+        .btn-tool:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+        }
+
+        /* ── A4 Document Page ── */
+        .page-container {
+            background: #ffffff;
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 12mm 15mm;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            border: 1px solid #cbd5e1;
+            position: relative;
+            box-sizing: border-box;
+            direction: rtl;
+            /* Document content is strictly in Arabic */
+        }
+
+        /* ── Header Box (Exact Replica of PDF) ── */
+        .doc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1.5px solid #222222;
+            padding: 10px 14px 12px 14px;
+            margin-bottom: 12px;
+            direction: ltr;
+            /* Keeps QR code on physical left */
+            box-sizing: border-box;
+            background: #ffffff;
+        }
+
+        /* QR block on the left */
+        .qr-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            flex-shrink: 0;
+            width: 125px;
+        }
+
+        .qr-box {
+            width: 120px;
+            height: 120px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-box canvas,
+        .qr-box img {
+            width: 120px !important;
+            height: 120px !important;
+            display: block;
+        }
+
+        .permit-number {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #000000;
+            letter-spacing: 0.5px;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            margin-top: 2px;
+        }
+
+        /* Title + Logos on the right */
+        .header-content-right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            direction: ltr;
+            /* Title -> Ajeer Logo -> Ministry Logo */
+            flex: 1;
+            gap: 28px;
+            padding-right: 4px;
+            padding-left: 20px;
+        }
+
+        .doc-main-title {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: #000000;
+            white-space: nowrap;
+            text-align: center;
+            font-family: 'Tajawal', sans-serif;
+            line-height: 1.2;
+        }
+
+        .header-logo-ajeer {
+            height: 48px;
+            width: auto;
+            max-width: 90px;
+            object-fit: contain;
+            display: block;
+            flex-shrink: 0;
+        }
+
+        .header-logo-ministry {
+            height: 52px;
+            width: auto;
+            max-width: 175px;
+            object-fit: contain;
+            display: block;
+            flex-shrink: 0;
+        }
+
+        /* ── Official Notice Intro ── */
+        .notice-intro {
+            font-size: 0.86rem;
+            text-align: justify;
+            text-justify: inter-word;
+            font-weight: 500;
+            margin-bottom: 11px;
+            line-height: 1.65;
+            color: #111827;
+        }
+
+        /* ── Unified Info Table (Exact Replica of Image 1 - Zero Gap) ── */
+        .info-table-unified {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .info-table-unified td {
+            border: 1px solid var(--border-color);
+            padding: 5px 8px;
+            font-size: 0.85rem;
+            vertical-align: middle;
+            text-align: center; /* strictly center-aligned across all cells per Image 1 */
+            box-sizing: border-box;
+            word-break: break-word;
+        }
+
+        /* Section Title Banners: بيانات العامل, شركة الإستقدام, etc. */
+        .table-section-title {
+            background-color: var(--bg-table-title);
+            font-weight: 800;
+            font-size: 0.92rem;
+            padding: 5px 8px !important;
+            color: #0f172a;
+            text-align: center;
+        }
+
+        /* Label Cells (Col 1 & Col 3) */
+        .col-lbl {
+            background-color: var(--bg-table-label);
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 0.83rem;
+            line-height: 1.35;
+            text-align: center;
+        }
+
+        /* Value Cells (Col 2 & Col 4) */
+        .col-val {
+            background-color: #ffffff;
+            font-weight: 600;
+            color: #000000;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        /* Colspan 3 values (Contract Description & Work Location) */
+        .col-val-span {
+            background-color: #ffffff;
+            font-weight: 600;
+            color: #000000;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        /* ── Declarations Section ── */
+        .declarations-block {
+            margin-top: 13px;
+            font-size: 0.83rem;
+            line-height: 1.6;
+            color: #0f172a;
+        }
+
+        .declarations-heading {
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.05rem;
+            margin-bottom: 7px;
+            color: #000000;
+            text-decoration: none;
+            /* strictly NO underline per PDF */
+        }
+
+        .declarations-intro {
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-size: 0.86rem;
+            color: #000000;
+        }
+
+        .declarations-list {
+            list-style: none;
+            padding-right: 0;
+            margin: 0;
+        }
+
+        .declarations-list li {
+            position: relative;
+            padding-right: 14px;
+            margin-bottom: 5px;
+            text-align: justify;
+            text-justify: inter-word;
+            font-size: 0.83rem;
+        }
+
+        .declarations-list li::before {
+            content: "•";
+            position: absolute;
+            right: 0;
+            font-weight: 900;
+            color: #000000;
+        }
+
+        /* ── Footer ── */
+        .doc-footer {
+            margin-top: 22px;
+            text-align: center;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #1e293b;
+            line-height: 1.6;
+            border: none;
+            /* strictly NO dashed line per PDF */
+        }
+
+        /* ── Print / PDF Generation Rules ── */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 8mm 12mm;
+            }
+
+            body {
+                background: #ffffff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .toolbar-actions {
+                display: none !important;
+            }
+
+            .page-container {
+                box-shadow: none !important;
+                border: none !important;
+                width: 100% !important;
+                min-height: auto !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .info-table-unified,
+            .declarations-block {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- External Toolbar (Controls outside the document, hidden in PDF/Print) -->
+    <div class="toolbar-actions" id="docToolbar">
+        <a href="index.html" class="btn-tool btn-back" id="btnDocBack">⬅ تعديل البيانات (Edit Form)</a>
+        <div style="display:flex;gap:8px;align-items:center;">
+            <button onclick="window.print()" class="btn-tool btn-print" id="btnDocPrint">🖨 طباعة / PDF</button>
+            <a id="btnSimulateScan" href="#" target="_blank" class="btn-tool btn-verify" style="display: none;">📱 فحص
+                الـ QR (Verify)</a>
+            <button type="button" class="btn-tool btn-lang" id="btnDocLang" onclick="toggleLanguage()"
+                title="تغيير اللغة / Switch Language">
+                <span id="docLangBtnText">English</span> 🌐
+            </button>
+        </div>
+    </div>
+
+    <!-- A4 Document (Exact Clone of Attached Reference PDF) -->
+    <div class="page-container" dir="rtl">
+
+        <!-- Header Box: Exact clone of PDF -->
+        <div class="doc-header">
+            <!-- Left: QR Code + Permit Number -->
+            <div class="qr-block">
+                <div class="qr-box" id="qrcode"></div>
+                <div class="permit-number" id="docPermitNumber">—</div>
+            </div>
+
+            <!-- Right: Title, Ajeer Logo, Ministry Logo -->
+            <div class="header-content-right">
+                <div class="doc-main-title" id="docMainTitle">تصريح أجير - تعاقد أجير</div>
+                <img src="public/logo-ajeer.png" onerror="this.onerror=null;this.src='logo-ajeer.png';" alt="Ajeer أجير"
+                    class="header-logo-ajeer">
+                <img src="public/logo-ministry.png" onerror="this.onerror=null;this.src='logo-ministry.png';"
+                    alt="وزارة الموارد البشرية والتنمية الاجتماعية" class="header-logo-ministry">
+            </div>
+        </div>
+
+        <!-- Official Intro Notice -->
+        <div class="notice-intro" id="docNoticeIntro">
+            نشعركم أنه تم التعاقد من قبلنا كشركة استقدام مع الجهة المستفيدة حسب المعلومات المبينة أدناه، ولذلك تم تسجيل
+            معلومات العقد لتكون بحوزة الموظف لإثبات عدم مخالفته لنظام العمل ولتقديمها إلى من يهمه الأمر من الجهات
+            المختصة عند طلبها للتحقق من صحة تواجده في مكان تقديم الخدمة
+        </div>
+
+        <!-- Unified Info Table: All 4 sections joined with zero space (Exact Clone of Image 1) -->
+        <table class="info-table-unified">
+            <colgroup>
+                <col style="width: 20%;">
+                <col style="width: 30%;">
+                <col style="width: 30%;">
+                <col style="width: 20%;">
+            </colgroup>
+
+            <!-- ── 1. بيانات العامل ── -->
+            <tr>
+                <td colspan="4" class="table-section-title">بيانات العامل</td>
+            </tr>
+            <tr>
+                <td class="col-lbl">اسم العامل</td>
+                <td class="col-val" id="docLaborerName">—</td>
+                <td class="col-lbl">المهنة</td>
+                <td class="col-val" id="docOccupation">—</td>
+            </tr>
+            <tr>
+                <td class="col-lbl">رقم الهوية / الإقامة</td>
+                <td class="col-val" id="docIdNumber">—</td>
+                <td class="col-lbl">الجنسية</td>
+                <td class="col-val" id="docNationality">—</td>
+            </tr>
+
+            <!-- ── 2. شركة الإستقدام ── -->
+            <tr>
+                <td colspan="4" class="table-section-title">شركة الإستقدام</td>
+            </tr>
+            <tr>
+                <td class="col-lbl">المنشأة المقدمة<br>للخدمة</td>
+                <td class="col-val" id="docProviderName">—</td>
+                <td class="col-lbl">رقم المنشأة في وزارة الموارد<br>البشرية والتنمية الاجتماعية</td>
+                <td class="col-val" id="docProviderNum">—</td>
+            </tr>
+
+            <!-- ── 3. المنشأة المستفيدة ── -->
+            <tr>
+                <td colspan="4" class="table-section-title">المنشأة المستفيدة</td>
+            </tr>
+            <tr>
+                <td class="col-lbl">المنشأة المستفيدة<br>من الخدمة</td>
+                <td class="col-val" id="docBeneficiaryName">—</td>
+                <td class="col-lbl">رقم المنشأة في وزارة الموارد<br>البشرية والتنمية الاجتماعية</td>
+                <td class="col-val" id="docBeneficiaryNum">—</td>
+            </tr>
+
+            <!-- ── 4. بيانات التصريح ── -->
+            <tr>
+                <td colspan="4" class="table-section-title">بيانات التصريح</td>
+            </tr>
+            <tr>
+                <td class="col-lbl">نبذة عن التعاقد</td>
+                <td colspan="3" class="col-val-span" id="docContractDesc">—</td>
+            </tr>
+            <tr>
+                <td class="col-lbl">تاريخ بداية التصريح</td>
+                <td class="col-val" id="docStartDate">—</td>
+                <td class="col-lbl">تاريخ إنتهاء التصريح</td>
+                <td class="col-val" id="docEndDate">—</td>
+            </tr>
+            <tr>
+                <td class="col-lbl">مواقع العمل</td>
+                <td colspan="3" class="col-val-span" id="docWorkLocation">—</td>
+            </tr>
+        </table>
+
+        <!-- Declarations Section (Exact Wording from PDF) -->
+        <div class="declarations-block">
+            <div class="declarations-heading">إقرارات</div>
+            <div class="declarations-intro">أقر أنا شركة الإستقدام المقدمة للخدمة والموضحة بياناتها أعلاه وأتعهد بـ:
+            </div>
+            <ul class="declarations-list">
+                <li>إن الموظف حامل هذا التصريح يحمله له ويتعهد بأن البيانات المدونة فيه صحيحة على مسؤوليته الشخصية، وأنه
+                    يعمل لدى المنشأة ولحسابها، بموجب رخصة إقامة سارية المفعول. وأتحمل أي تبعات قانونية تترتب على غرامات
+                    أو خلاف المذكور أعلاه.</li>
+                <li>الالتزام والتقيد بأنظمة العمل والعمال وأي أنظمة ولوائح وقرارات أخرى ذات علاقة.</li>
+                <li>أن الموقع الإلكتروني الخاص بأجير أو القائمين عليه بأنه عبارة عن وسيط إلكتروني ما بين الباحثين عن
+                    العمل وأصحاب الأعمال فقط وبدون أي التزام قانوني أو غيره على القائمين على موقع أجير.</li>
+                <li>أي تعديل أو كشط في هذا التصريح يجعله لاغياً.</li>
+            </ul>
+        </div>
+
+        <!-- Footer Notice -->
+        <div class="doc-footer">
+            للتحقق من صحة هذا التصريح وسريان مفعوله بإمكانك زيارة موقع أجير (https://ajeer.com.sa)<br>
+            * خدمة معتمدة من وزارة الموارد البشرية والتنمية الاجتماعية
+        </div>
+
+    </div><!-- end page-container -->
+
+    <script src="/config.js"></script>
+    <script>
+        let currentLang = localStorage.getItem('ajeer_lang') || 'ar';
+        let currentPermit = null;
+
+        // Toolbar translation dictionary (Official document itself stays strictly in Arabic)
+        const toolbarI18n = {
+            ar: {
+                btnBack: "⬅ تعديل البيانات (Edit Form)",
+                btnPrint: "🖨 طباعة / PDF",
+                btnVerify: "📱 فحص الـ QR (Verify)",
+                langBtnText: "English"
+            },
+            en: {
+                btnBack: "⬅ Back to Form",
+                btnPrint: "🖨 Print / PDF",
+                btnVerify: "📱 Verify QR Code",
+                langBtnText: "عربى"
+            }
+        };
+
+        function applyLanguage(lang) {
+            currentLang = lang;
+            const t = toolbarI18n[lang] || toolbarI18n.ar;
+
+            document.getElementById('btnDocBack').innerText = t.btnBack;
+            document.getElementById('btnDocPrint').innerText = t.btnPrint;
+            document.getElementById('btnSimulateScan').innerText = t.btnVerify;
+            document.getElementById('docLangBtnText').innerText = t.langBtnText;
+        }
+
+        function toggleLanguage() {
+            const nextLang = (currentLang === 'ar' ? 'en' : 'ar');
+            localStorage.setItem('ajeer_lang', nextLang);
+            applyLanguage(nextLang);
+        }
+
+        function generatePermitNumber(idNumber) {
+            if (!idNumber || idNumber === '—') return 'TQ4847073';
+            const hash = String(idNumber).split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+            return 'TQ' + (hash * 97 % 9000000 + 1000000);
+        }
+
+        function formatDateDMY(dateStr) {
+            if (!dateStr || dateStr === '—') return '—';
+            if (dateStr.includes('/')) return dateStr;
+            const parts = dateStr.split('-');
+            if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            return dateStr;
+        }
+
+        function renderPermit(data) {
+            currentPermit = data;
+
+            document.getElementById('docLaborerName').innerText = data.laborerName || '—';
+            document.getElementById('docOccupation').innerText = data.occupation || '—';
+            document.getElementById('docIdNumber').innerText = data.idNumber || '—';
+            document.getElementById('docNationality').innerText = data.nationality || '—';
+            document.getElementById('docProviderName').innerText = data.providerName || '—';
+            document.getElementById('docProviderNum').innerText = data.providerNum || '—';
+            document.getElementById('docBeneficiaryName').innerText = data.beneficiaryName || '—';
+            document.getElementById('docBeneficiaryNum').innerText = data.beneficiaryNum || '—';
+            document.getElementById('docContractDesc').innerText = data.contractDesc || '—';
+            document.getElementById('docStartDate').innerText = formatDateDMY(data.startDate);
+            document.getElementById('docEndDate').innerText = formatDateDMY(data.endDate);
+            document.getElementById('docWorkLocation').innerText = data.workLocation || '—';
+
+            const permitNum = data.permitNumber || (data.idNumber ? generatePermitNumber(data.idNumber) : '—');
+            document.getElementById('docPermitNumber').innerText = permitNum;
+
+            const qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = '';
+
+            if (data.idNumber && data.idNumber !== '—') {
+                const baseUrl = (window.APP_CONFIG && window.APP_CONFIG.BASE_URL) || window.location.origin;
+                const verificationUrl = `${baseUrl.replace(/\/$/, '')}/verify.html?id=${encodeURIComponent(data.idNumber)}`;
+                document.getElementById('btnSimulateScan').href = verificationUrl;
+
+                if (typeof QRCode !== 'undefined') {
+                    new QRCode(qrContainer, {
+                        text: verificationUrl,
+                        width: 120, height: 120,
+                        colorDark: "#000000", colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                } else {
+                    qrContainer.innerHTML = `<img src="https://quickchart.io/qr?text=${encodeURIComponent(verificationUrl)}&size=120" alt="QR Code">`;
+                }
+            } else {
+                document.getElementById('btnSimulateScan').href = 'verify.html';
+                qrContainer.innerHTML = `<div style="border: 1px dashed #cbd5e1; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: #94a3b8; text-align: center; padding: 4px;">QR Code<br>(لا توجد بيانات)</div>`;
+            }
+        }
+
+        async function loadPermitData() {
+            applyLanguage(currentLang);
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const idParam = urlParams.get('id');
+
+            // 1️⃣ Try server API if id parameter provided
+            if (idParam) {
+                try {
+                    const resp = await fetch(`/api/permits/by-id/${encodeURIComponent(idParam)}`);
+                    if (resp.ok) {
+                        const result = await resp.json();
+                        localStorage.setItem('permit_' + idParam, JSON.stringify(result.permit));
+                        return renderPermit(result.permit);
+                    }
+                } catch (e) {
+                    console.warn('⚠️ API unavailable, trying localStorage');
+                }
+            }
+
+            // 2️⃣ localStorage fallback for specific ID
+            let data = null;
+            if (idParam) {
+                const s = localStorage.getItem('permit_' + idParam);
+                if (s) {
+                    try { data = JSON.parse(s); } catch (e) { }
+                }
+            }
+
+            // 3️⃣ Latest submitted permit in localStorage
+            if (!data) {
+                const s = localStorage.getItem('currentPermitData');
+                if (s) {
+                    try { data = JSON.parse(s); } catch (e) { }
+                }
+            }
+
+            // 4️⃣ If no data submitted at all, render blank/placeholder state
+            if (!data) {
+                data = {
+                    laborerName: '—',
+                    occupation: '—',
+                    idNumber: '—',
+                    nationality: '—',
+                    providerName: '—',
+                    providerNum: '—',
+                    beneficiaryName: '—',
+                    beneficiaryNum: '—',
+                    contractDesc: '—',
+                    startDate: '—',
+                    endDate: '—',
+                    workLocation: '—',
+                    permitNumber: '—'
+                };
+            }
+
+            renderPermit(data);
+        }
+
+        window.addEventListener('DOMContentLoaded', loadPermitData);
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</body>
+
+</html>
