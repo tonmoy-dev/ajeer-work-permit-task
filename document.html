@@ -358,19 +358,74 @@
                 page-break-inside: avoid;
             }
         }
+
+        /* Applied temporarily while rasterizing the page into a PDF */
+        .page-container.pdf-mode {
+            box-shadow: none !important;
+            border: none !important;
+            min-height: auto !important;
+            margin: 0 !important;
+        }
+
+        /* PDF loader overlay */
+        .pdf-loader {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(3px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 14px;
+            z-index: 100000;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .pdf-loader.show {
+            display: flex;
+        }
+
+        .pdf-spinner {
+            width: 48px;
+            height: 48px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: pdfspin 0.8s linear infinite;
+        }
+
+        @keyframes pdfspin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media print {
+            .pdf-loader {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 
 <body>
 
+    <!-- PDF generation loader -->
+    <div class="pdf-loader" id="pdfLoader">
+        <div class="pdf-spinner"></div>
+        <div>جاري إنشاء ملف PDF...</div>
+    </div>
+
     <!-- External Toolbar (Controls outside the document, hidden in PDF/Print) -->
     <div class="toolbar-actions" id="docToolbar">
         <a href="index.html" class="btn-tool btn-back" id="btnDocBack">⬅ تعديل البيانات (Edit Form)</a>
         <div style="display:flex;gap:8px;align-items:center;">
-            <button onclick="window.print()" class="btn-tool btn-print" id="btnDocPrint">🖨 طباعة / PDF</button>
+            <button onclick="downloadPDF()" class="btn-tool btn-print" id="btnDocPrint">⬇ تحميل PDF</button>
             <a id="btnSimulateScan" href="#" target="_blank" class="btn-tool btn-verify" style="display: none;">📱 فحص
                 الـ QR (Verify)</a>
-            <button type="button" class="btn-tool btn-lang" id="btnDocLang" onclick="toggleLanguage()"
+            <button type="button" class="btn-tool btn-lang" id="btnDocLang" style="display:none !important" onclick="toggleLanguage()"
                 title="تغيير اللغة / Switch Language">
                 <span id="docLangBtnText">English</span> 🌐
             </button>
@@ -499,20 +554,20 @@
 
     <script src="/config.js"></script>
     <script>
-        let currentLang = localStorage.getItem('ajeer_lang') || 'ar';
+        let currentLang = 'ar'; // Language switcher hidden: Arabic only
         let currentPermit = null;
 
         // Toolbar translation dictionary (Official document itself stays strictly in Arabic)
         const toolbarI18n = {
             ar: {
                 btnBack: "⬅ تعديل البيانات (Edit Form)",
-                btnPrint: "🖨 طباعة / PDF",
+                btnPrint: "⬇ تحميل PDF",
                 btnVerify: "📱 فحص الـ QR (Verify)",
                 langBtnText: "English"
             },
             en: {
                 btnBack: "⬅ Back to Form",
-                btnPrint: "🖨 Print / PDF",
+                btnPrint: "⬇ Download PDF",
                 btnVerify: "📱 Verify QR Code",
                 langBtnText: "عربى"
             }
@@ -526,6 +581,40 @@
             document.getElementById('btnDocPrint').innerText = t.btnPrint;
             document.getElementById('btnSimulateScan').innerText = t.btnVerify;
             document.getElementById('docLangBtnText').innerText = t.langBtnText;
+        }
+
+        async function downloadPDF() {
+            const btn = document.getElementById('btnDocPrint');
+            const loader = document.getElementById('pdfLoader');
+            const page = document.querySelector('.page-container');
+            btn.disabled = true;
+            loader.classList.add('show');
+
+            // Render an off-screen copy so the visible document is never altered
+            const holder = document.createElement('div');
+            holder.style.cssText = 'position:fixed;left:-10000px;top:0;width:210mm;';
+            const clone = page.cloneNode(true);
+            clone.classList.add('pdf-mode');
+            holder.appendChild(clone);
+            document.body.appendChild(holder);
+            try {
+                const num = document.getElementById('docPermitNumber').innerText.trim();
+                await html2pdf().set({
+                    margin: 0,
+                    filename: 'ajeer-permit-' + (num && num !== '—' ? num : 'document') + '.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    pagebreak: { mode: ['css', 'legacy'], avoid: ['.info-table-unified', '.declarations-block'] }
+                }).from(clone).save();
+            } catch (e) {
+                console.error(e);
+                alert('PDF generation failed');
+            } finally {
+                holder.remove();
+                loader.classList.remove('show');
+                btn.disabled = false;
+            }
         }
 
         function toggleLanguage() {
@@ -653,6 +742,7 @@
         window.addEventListener('DOMContentLoaded', loadPermitData);
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </body>
 
 </html>

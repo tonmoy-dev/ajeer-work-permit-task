@@ -411,7 +411,7 @@
                 <span class="badge-demo" id="txtBadgeDemo">منصة تصاريح العمل (Ajeer Prototype)</span>
             </div>
             <!-- Language Switcher Button -->
-            <button type="button" class="lang-btn" id="headerLangBtn" onclick="toggleLanguage()"
+            <button type="button" class="lang-btn" id="headerLangBtn" style="display:none !important" onclick="toggleLanguage()"
                 title="تغيير اللغة / Switch Language">
                 <span id="langBtnText">English</span> 🌐
             </button>
@@ -569,7 +569,7 @@
         };
 
         // ── i18n Translation Dictionary ────────────────────────────────
-        let currentLang = localStorage.getItem('ajeer_lang') || 'ar';
+        let currentLang = 'ar'; // Language switcher hidden: Arabic only
 
         const i18n = {
             ar: {

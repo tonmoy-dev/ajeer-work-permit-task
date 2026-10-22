@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 
 <head>
     <meta charset="UTF-8">
@@ -309,7 +309,7 @@
             </div>
 
             <!-- Language Switcher -->
-            <button class="lang-btn" onclick="toggleLanguage()">
+            <button class="lang-btn" style="display:none !important" onclick="toggleLanguage()">
                 <span id="langBtnText">عربى</span> 🌐
             </button>
         </div>
@@ -414,7 +414,7 @@
 
         <div class="copyright-text">١٤٤٨هـ / أجير حلول الموارد البشرية</div>
 
-        <button class="lang-switch-footer" onclick="toggleLanguage()">
+        <button class="lang-switch-footer" style="display:none !important" onclick="toggleLanguage()">
             <span id="txtFooterLang">English</span> 🌐
         </button>
 
@@ -440,7 +440,7 @@
     <div class="toast" id="toastMsg">Page link copied to clipboard!</div>
 
     <script>
-        let currentLang = localStorage.getItem('ajeer_lang') || 'ar';
+        let currentLang = 'ar'; // Language switcher hidden: Arabic only
 
         const i18n = {
             en: {
