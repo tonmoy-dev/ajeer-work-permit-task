@@ -42,7 +42,8 @@
             flex-direction: column;
         }
 
-        header {
+        header,
+        .header-bar {
             background: #ffffff;
             border-bottom: 1px solid #e2e8f0;
             padding: 0.85rem 1.5rem;
@@ -63,6 +64,7 @@
             align-items: center;
         }
 
+        .verify-header-logo-ministry,
         .header-logo-ministry {
             height: 38px;
             max-height: 42px;
@@ -71,6 +73,7 @@
             object-fit: contain;
         }
 
+        .verify-header-logo-ajeer,
         .header-logo-ajeer {
             height: 36px;
             max-height: 40px;
@@ -80,10 +83,12 @@
         }
 
         @media (max-width: 640px) {
+            .verify-header-logo-ministry,
             .header-logo-ministry {
                 height: 30px;
             }
 
+            .verify-header-logo-ajeer,
             .header-logo-ajeer {
                 height: 28px;
             }
@@ -404,29 +409,28 @@
 
 <body>
 
-    <header>
+    <!-- Header Bar -->
+    <div class="header-bar">
         <div class="header-container">
-            <!-- Ministry Logo (Right side in RTL) -->
+            <!-- Ministry of Human Resources Logo (Right side in RTL) -->
             <div class="header-logo-wrap">
                 <img src="public/logo-ministry.png" onerror="this.onerror=null;this.src='logo-ministry.png';"
-                    alt="وزارة الموارد البشرية والتنمية الاجتماعية" class="header-logo-ministry">
+                    alt="وزارة الموارد البشرية والتنمية الاجتماعية" class="verify-header-logo-ministry">
             </div>
 
             <!-- Ajeer Brand Logo (Left side in RTL) -->
             <div class="header-logo-wrap">
-                <img src="public/logo-ajeer.png" onerror="this.onerror=null;this.src='logo-ajeer.png';" alt="Ajeer أجير"
-                    class="header-logo-ajeer">
+                <img src="public/logo-ajeer.png" onerror="this.onerror=null;this.src='logo-ajeer.png';"
+                    alt="Ajeer أجير" class="verify-header-logo-ajeer">
             </div>
 
             <!-- Hidden elements to preserve JS compatibility -->
-            <span class="badge-demo" id="txtBadgeDemo" style="display:none !important">منصة تصاريح العمل (Ajeer
-                Prototype)</span>
-            <button type="button" class="lang-btn" id="headerLangBtn" style="display:none !important"
-                onclick="toggleLanguage()">
+            <span class="badge-demo" id="txtBadgeDemo" style="display:none !important">منصة تصاريح العمل (Ajeer Prototype)</span>
+            <button type="button" class="lang-btn" id="headerLangBtn" style="display:none !important" onclick="toggleLanguage()">
                 <span id="langBtnText">English</span> 🌐
             </button>
         </div>
-    </header>
+    </div>
 
     <div class="main-container">
         <div class="hero-banner">

@@ -32,7 +32,50 @@
             background-color: #e2e8f0;
             color: #000000;
             line-height: 1.5;
-            padding: 20px 0;
+            padding: 0 0 20px 0;
+        }
+
+        /* Top Header Bar */
+        .header-bar {
+            width: 100%;
+            background: #ffffff;
+            padding: 0.85rem 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 15px;
+        }
+
+        .header-bar .header-container {
+            max-width: 210mm;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo-wrap {
+            display: flex;
+            align-items: center;
+        }
+
+        .verify-header-logo-ministry {
+            height: 38px;
+            max-height: 42px;
+            width: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .verify-header-logo-ajeer {
+            height: 36px;
+            max-height: 40px;
+            width: auto;
+            display: block;
+            object-fit: contain;
         }
 
         /* ── External Toolbar (Screen view only) ── */
@@ -362,6 +405,7 @@
                 print-color-adjust: exact !important;
             }
 
+            .header-bar,
             .toolbar-actions {
                 display: none !important;
             }
@@ -477,6 +521,23 @@
 </head>
 
 <body>
+
+    <!-- Header Bar (Top website bar matching verify page) -->
+    <div class="header-bar">
+        <div class="header-container">
+            <!-- Ministry of Human Resources Logo (Right side in RTL) -->
+            <div class="header-logo-wrap">
+                <img src="public/logo-ministry.png" onerror="this.onerror=null;this.src='logo-ministry.png';"
+                    alt="وزارة الموارد البشرية والتنمية الاجتماعية" class="verify-header-logo-ministry">
+            </div>
+
+            <!-- Ajeer Brand Logo (Left side in RTL) -->
+            <div class="header-logo-wrap">
+                <img src="public/logo-ajeer.png" onerror="this.onerror=null;this.src='logo-ajeer.png';"
+                    alt="Ajeer أجير" class="verify-header-logo-ajeer">
+            </div>
+        </div>
+    </div>
 
     <!-- PDF generation loader -->
     <div class="pdf-loader" id="pdfLoader">
