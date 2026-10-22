@@ -12,15 +12,15 @@
 
 require('dotenv').config();
 const express = require('express');
-const cors    = require('cors');
-const path    = require('path');
+const cors = require('cors');
+const path = require('path');
 
 // Initialize DB (creates permits.db if not exists)
 require('./db');
 
 const permitsRouter = require('./routes/permits');
 
-const app  = express();
+const app = express();
 const PORT = process.env.PORT || 3000;
 const BASE_URL = (process.env.BASE_URL || `http://localhost:${PORT}`).replace(/\/$/, '');
 

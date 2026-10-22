@@ -640,8 +640,7 @@
                 padding:1rem 1.25rem;border-radius:10px;margin-bottom:1rem;
                 font-weight:700;font-size:0.95rem;text-align:center;
             `;
-            banner.innerHTML = `⚠️ Permit not found or may have been tampered with.<br>
-                <small style="font-weight:400">ID: ${idParam}</small>`;
+            banner.innerHTML = `⚠️ Permit not found`;
             const container = document.querySelector('.content-container');
             container.insertBefore(banner, container.firstChild.nextSibling);
         }
