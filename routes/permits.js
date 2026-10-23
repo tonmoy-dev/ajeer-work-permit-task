@@ -3,8 +3,8 @@
  */
 
 const express = require('express');
-const router  = express.Router();
-const db      = require('../db');
+const router = express.Router();
+const db = require('../db');
 
 // ── Helper: Generate TQ permit number ─────────────────────────
 function generatePermitNumber(idNumber) {
@@ -24,7 +24,7 @@ function generatePermitNumber(idNumber) {
 // ── Helper: Compute live status ────────────────────────────────
 function computeStatus(endDate) {
     if (!endDate) return 'active';
-    const end   = new Date(endDate);
+    const end = new Date(endDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return end < today ? 'expired' : 'active';
@@ -41,10 +41,12 @@ router.post('/', (req, res) => {
     } = req.body;
 
     // Basic validation
-    const required = { laborerName, occupation, idNumber, nationality,
-                       providerName, providerNum,
-                       beneficiaryName, beneficiaryNum,
-                       startDate, endDate };
+    const required = {
+        laborerName, occupation, idNumber, nationality,
+        providerName, providerNum,
+        beneficiaryName, beneficiaryNum,
+        startDate, endDate
+    };
     for (const [key, val] of Object.entries(required)) {
         if (!val || String(val).trim() === '') {
             return res.status(400).json({ error: `Missing required field: ${key}` });
@@ -148,54 +150,53 @@ router.get('/by-permit/:permitNumber', (req, res) => {
     return res.json({ success: true, permit: formatPermit(permit) });
 });
 
-// ── GET /api/permits ───────────────────────────────────────────
-// List all permits (admin/debug use)
-router.get('/', (req, res) => {
-    const permits = db.prepare(
-        `SELECT * FROM permits ORDER BY created_at DESC LIMIT 100`
-    ).all();
-
-    return res.json({
-        success: true,
-        count: permits.length,
-        permits: permits.map(formatPermit)
-    });
-});
+// ── GET /api/permits (Disabled for security) ────────────────────
+// router.get('/', (req, res) => {
+//     const permits = db.prepare(
+//         `SELECT * FROM permits ORDER BY created_at DESC LIMIT 100`
+//     ).all();
+// 
+//     return res.json({
+//         success: true,
+//         count: permits.length,
+//         permits: permits.map(formatPermit)
+//     });
+// });
 
 // ── DELETE /api/permits/:permitNumber ─────────────────────────
 // Revoke a permit
-router.delete('/:permitNumber', (req, res) => {
-    const { permitNumber } = req.params;
+// router.delete('/:permitNumber', (req, res) => {
+//     const { permitNumber } = req.params;
 
-    const permit = db.prepare('SELECT * FROM permits WHERE permit_number = ?').get(permitNumber);
-    if (!permit) {
-        return res.status(404).json({ error: 'Permit not found' });
-    }
+//     const permit = db.prepare('SELECT * FROM permits WHERE permit_number = ?').get(permitNumber);
+//     if (!permit) {
+//         return res.status(404).json({ error: 'Permit not found' });
+//     }
 
-    db.prepare(`UPDATE permits SET status = 'revoked' WHERE permit_number = ?`).run(permitNumber);
+//     db.prepare(`UPDATE permits SET status = 'revoked' WHERE permit_number = ?`).run(permitNumber);
 
-    return res.json({ success: true, message: `Permit ${permitNumber} revoked` });
-});
+//     return res.json({ success: true, message: `Permit ${permitNumber} revoked` });
+// });
 
 // ── Format helper: snake_case DB → camelCase API response ─────
 function formatPermit(p) {
     return {
-        id:              p.id,
-        permitNumber:    p.permit_number,
-        laborerName:     p.laborer_name,
-        occupation:      p.occupation,
-        idNumber:        p.id_number,
-        nationality:     p.nationality,
-        providerName:    p.provider_name,
-        providerNum:     p.provider_num,
+        id: p.id,
+        permitNumber: p.permit_number,
+        laborerName: p.laborer_name,
+        occupation: p.occupation,
+        idNumber: p.id_number,
+        nationality: p.nationality,
+        providerName: p.provider_name,
+        providerNum: p.provider_num,
         beneficiaryName: p.beneficiary_name,
-        beneficiaryNum:  p.beneficiary_num,
-        contractDesc:    p.contract_desc,
-        startDate:       p.start_date,
-        endDate:         p.end_date,
-        workLocation:    p.work_location,
-        status:          computeStatus(p.end_date), // live computed, not stored
-        createdAt:       p.created_at
+        beneficiaryNum: p.beneficiary_num,
+        contractDesc: p.contract_desc,
+        startDate: p.start_date,
+        endDate: p.end_date,
+        workLocation: p.work_location,
+        status: computeStatus(p.end_date), // live computed, not stored
+        createdAt: p.created_at
     };
 }
 
