@@ -250,7 +250,7 @@
             font-size: 0.86rem;
             text-align: justify;
             text-justify: inter-word;
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 11px;
             line-height: 1.65;
             color: #111827;
@@ -533,8 +533,8 @@
 
             <!-- Ajeer Brand Logo (Left side in RTL) -->
             <div class="header-logo-wrap">
-                <img src="public/logo-ajeer.png" onerror="this.onerror=null;this.src='logo-ajeer.png';"
-                    alt="Ajeer أجير" class="verify-header-logo-ajeer">
+                <img src="public/logo-ajeer.png" onerror="this.onerror=null;this.src='logo-ajeer.png';" alt="Ajeer أجير"
+                    class="verify-header-logo-ajeer">
             </div>
         </div>
     </div>
@@ -549,8 +549,9 @@
     <div class="toolbar-actions" id="docToolbar">
         <a href="index.html" class="btn-tool btn-back" id="btnDocBack">⬅ تعديل البيانات (Edit Form)</a>
         <div style="display:flex;gap:8px;align-items:center;">
-            <button onclick="window.print()" class="btn-tool btn-window-print" id="btnDocWindowPrint"
-                style="display: none;">🖨️ طباعة (Print)</button>
+            <button onclick="window.print()" class="btn-tool btn-window-print" id="btnDocWindowPrint">🖨️ طباعة
+                (Print)</button>
+            <!-- style="display: none;" -->
             <button onclick=" downloadPDF()" class="btn-tool btn-print" id="btnDocPrint">⬇ تحميل PDF</button>
             <a id="btnSimulateScan" href="#" target="_blank" class="btn-tool btn-verify" style="display: none;">📱 فحص
                 الـ QR (Verify)</a>
@@ -733,13 +734,16 @@
             holder.appendChild(clone);
             document.body.appendChild(holder);
             try {
+                // Make sure web fonts are loaded so text isn't rasterized with fallback fonts
+                if (document.fonts && document.fonts.ready) await document.fonts.ready;
                 const num = document.getElementById('docPermitNumber').innerText.trim();
                 await html2pdf().set({
                     margin: 0,
                     filename: 'ajeer-permit-' + (num && num !== '—' ? num : 'document') + '.pdf',
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    // PNG is lossless (no JPEG halos around text); scale 4 ≈ 384 DPI on A4
+                    image: { type: 'png' },
+                    html2canvas: { scale: 4, useCORS: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0, letterRendering: false },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
                     pagebreak: { mode: ['css', 'legacy'], avoid: ['.info-table-unified', '.declarations-block'] }
                 }).from(clone).save();
             } catch (e) {
