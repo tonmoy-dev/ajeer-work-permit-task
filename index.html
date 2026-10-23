@@ -83,6 +83,7 @@
         }
 
         @media (max-width: 640px) {
+
             .verify-header-logo-ministry,
             .header-logo-ministry {
                 height: 30px;
@@ -420,13 +421,16 @@
 
             <!-- Ajeer Brand Logo (Left side in RTL) -->
             <div class="header-logo-wrap">
-                <img src="public/logo-ajeer.png" onerror="this.onerror=null;this.src='logo-ajeer.png';"
-                    alt="Ajeer أجير" class="verify-header-logo-ajeer">
+                <img src="public/logo-ajeer.png" onerror="this.onerror=null;this.src='logo-ajeer.png';" alt="Ajeer أجير"
+                    class="verify-header-logo-ajeer">
             </div>
 
             <!-- Hidden elements to preserve JS compatibility -->
-            <span class="badge-demo" id="txtBadgeDemo" style="display:none !important">منصة تصاريح العمل (Ajeer Prototype)</span>
-            <button type="button" class="lang-btn" id="headerLangBtn" style="display:none !important" onclick="toggleLanguage()">
+            <span class="badge-demo" id="txtBadgeDemo" style="display:none !important">منصة تصاريح العمل (Ajeer
+                Prototype)</span>
+            <span id="txtDemoSampleBtn" style="display:none !important"></span>
+            <button type="button" class="lang-btn" id="headerLangBtn" style="display:none !important"
+                onclick="toggleLanguage()">
                 <span id="langBtnText">English</span> 🌐
             </button>
         </div>
@@ -435,8 +439,7 @@
     <div class="main-container">
         <div class="hero-banner">
             <h1 id="txtHeroTitle">تصريح أجير</h1>
-            <p id="txtHeroDesc">أدخل بيانات التصريح لإصدار الوثيقة وتفعيل رمز QR، أو اضغط على أيقونة النموذج التجريبي
-                لاختبار الإرسال مباشرة</p>
+            <p id="txtHeroDesc">أدخل بيانات التصريح لإصدار الوثيقة الرسمية المعتمدة وتفعيل رمز التحقق QR</p>
         </div>
 
         <!-- Form -->
@@ -448,6 +451,7 @@
                     <p id="txtFormCardSubtitle">قم بتعبئة بيانات العامل والمنشآت لإصدار تصريح عمل معتمد</p>
                 </div>
                 <div class="form-actions-top">
+                    <!-- Demo Sample Button (Commented out)
                     <button type="button" class="btn-demo-sample" id="btnDemoSample" onclick="loadSampleData()"
                         title="تعبئة نموذج تجريبي لاختبار الإرسال (Load Demo Sample)">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -460,6 +464,7 @@
                         </svg>
                         <span id="txtDemoSampleBtn">نموذج تجريبي (Demo Sample)</span>
                     </button>
+                    -->
                     <button type="button" class="btn-clear-form" id="btnClearForm" onclick="clearFormData()"
                         title="مسح الحقول (Clear Fields)">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -531,7 +536,7 @@
                     <div class="form-group full-width">
                         <label for="contractDesc" id="lblContractDesc">نبذة عن التعاقد <span>(Contract
                                 Description)</span></label>
-                        <textarea id="contractDesc" rows="2"
+                        <textarea id="contractDesc" rows="4" style="resize: none;"
                             placeholder="e.g. Joint cooperation between the two companies"></textarea>
                     </div>
                     <div class="form-group">
@@ -600,7 +605,7 @@
                 langBtnText: "English",
                 badgeDemo: "منصة تصاريح العمل (Ajeer Prototype)",
                 heroTitle: "تصريح أجير",
-                heroDesc: "أدخل بيانات التصريح لإصدار الوثيقة وتفعيل رمز QR، أو اضغط على أيقونة النموذج التجريبي لاختبار الإرسال مباشرة",
+                heroDesc: "أدخل بيانات التصريح لإصدار الوثيقة الرسمية المعتمدة وتفعيل رمز التحقق QR",
                 formCardTitle: "إدخال بيانات التصريح (Permit Details)",
                 formCardSubtitle: "قم بتعبئة بيانات العامل والمنشآت لإصدار تصريح عمل معتمد",
                 demoSampleBtn: "نموذج تجريبي (Demo Sample)",
@@ -634,7 +639,7 @@
                 langBtnText: "عربى",
                 badgeDemo: "Work Permit Platform (Ajeer Prototype)",
                 heroTitle: "Ajeer Permit",
-                heroDesc: "Enter permit information to issue the official permit document with QR code, or use Demo Sample to test submission.",
+                heroDesc: "Enter permit information to issue the official certified permit document with verification QR code.",
                 formCardTitle: "Permit Information",
                 formCardSubtitle: "Fill in laborer and establishment details to issue a certified permit",
                 demoSampleBtn: "Demo Sample",
