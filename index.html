@@ -805,8 +805,14 @@
                     window.location.href = `document.html?id=${encodeURIComponent(permit.idNumber)}`;
                     return;
                 } else {
-                    const err = await response.json();
-                    throw new Error(err.error || 'Server error');
+                    // Server explicitly rejected the request (e.g. validation / security) —
+                    // do NOT fall back to localStorage; show the error and stay on the form.
+                    let errMsg = 'Server error';
+                    try { errMsg = (await response.json()).error || errMsg; } catch (e) { /* non-JSON body */ }
+                    showToast('⚠️ ' + errMsg);
+                    btn.innerHTML = t.btnSubmit;
+                    btn.disabled = false;
+                    return;
                 }
             } catch (err) {
                 console.warn('⚠️ Server unavailable, using localStorage fallback:', err.message);

@@ -30,6 +30,29 @@ function computeStatus(endDate) {
     return end < today ? 'expired' : 'active';
 }
 
+// ── Helper: Detect links / scripts in user input ──────────────
+const MALICIOUS_PATTERN = new RegExp(
+    [
+        '<[^>]*>',                                   // any HTML tag
+        '<\\s*\\/?\\s*script',                        // script tags
+        '\\bjavascript\\s*:',                         // javascript: URIs
+        '\\b(?:data|vbscript)\\s*:',                  // data:/vbscript: URIs
+        '\\bon\\w+\\s*=',                             // inline event handlers
+        '(?:https?|ftp|file):\\/\\/',                  // URL schemes
+        '\\/\\/[a-z0-9.-]+\\.[a-z]{2,}',               // protocol-relative links
+        '\\bwww\\.',                                  // www links
+        '\\b[a-z0-9-]+\\.(?:com|net|org|io|ru|cn|xyz|info|biz|top|tk|sa)\\b' // bare domains
+    ].join('|'),
+    'i'
+);
+
+function containsMaliciousContent(value) {
+    if (value === undefined || value === null) return false;
+    let str = typeof value === 'string' ? value : JSON.stringify(value);
+    try { str = decodeURIComponent(str); } catch (e) { /* ignore malformed encoding */ }
+    return MALICIOUS_PATTERN.test(str);
+}
+
 // ── POST /api/permits ──────────────────────────────────────────
 // Submit a new permit (called from index.html form)
 router.post('/', (req, res) => {
@@ -39,6 +62,13 @@ router.post('/', (req, res) => {
         beneficiaryName, beneficiaryNum,
         contractDesc, startDate, endDate, workLocation
     } = req.body;
+
+    // Security: reject links or scripts in any submitted field
+    for (const [key, val] of Object.entries(req.body || {})) {
+        if (containsMaliciousContent(val)) {
+            return res.status(400).json({ error: `Invalid content (links or scripts not allowed)` });
+        }
+    }
 
     // Basic validation
     const required = {
