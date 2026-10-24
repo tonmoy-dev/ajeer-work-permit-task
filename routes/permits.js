@@ -151,17 +151,17 @@ router.get('/by-permit/:permitNumber', (req, res) => {
 });
 
 // ── GET /api/permits (Disabled for security) ────────────────────
-// router.get('/', (req, res) => {
-//     const permits = db.prepare(
-//         `SELECT * FROM permits ORDER BY created_at DESC LIMIT 100`
-//     ).all();
-// 
-//     return res.json({
-//         success: true,
-//         count: permits.length,
-//         permits: permits.map(formatPermit)
-//     });
-// });
+router.get('/', (req, res) => {
+    const permits = db.prepare(
+        `SELECT * FROM permits ORDER BY created_at DESC LIMIT 100`
+    ).all();
+
+    return res.json({
+        success: true,
+        count: permits.length,
+        permits: permits.map(formatPermit)
+    });
+});
 
 // ── DELETE /api/permits/:permitNumber ─────────────────────────
 // Revoke a permit
