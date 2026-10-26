@@ -264,8 +264,8 @@
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.25rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem 1.25rem;
             margin-bottom: 1.5rem;
         }
 
@@ -273,6 +273,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.4rem;
+            min-width: 0;
         }
 
         .form-group.full-width {
@@ -294,6 +295,7 @@
 
         .form-group input,
         .form-group textarea {
+            width: 100%;
             padding: 0.75rem 1rem;
             border: 1.5px solid var(--border-color);
             border-radius: 8px;
@@ -302,6 +304,7 @@
             outline: none;
             font-family: 'Tajawal', 'Inter', sans-serif;
             resize: vertical;
+            background: #ffffff;
         }
 
         .form-group input:focus,
@@ -345,12 +348,29 @@
         }
 
         @media (max-width: 600px) {
-            .form-grid {
-                grid-template-columns: 1fr;
+            .form-card {
+                padding: 1.5rem 1rem;
             }
 
-            .hero-banner {
-                padding: 1.5rem;
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem 0.75rem;
+            }
+
+            .form-group input,
+            .form-group textarea {
+                padding: 0.65rem 0.75rem;
+                font-size: 0.9rem;
+            }
+
+            .form-group label {
+                font-size: 0.84rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .form-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>

@@ -147,7 +147,7 @@ app.listen(PORT, () => {
     console.log('║   📁 Database: permits.db                     ║');
     console.log('║   📄 API: /api/permits                        ║');
     console.log('║   🔐 Auth: /api/auth                          ║');
-    console.log('║   🛡️ Protected: /permit-form.html             ║');
+    console.log('║   🛡️ Protected pages                           ║');
     console.log('╚═══════════════════════════════════════════════╝');
     console.log('');
 });

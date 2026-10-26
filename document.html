@@ -634,13 +634,16 @@
             currentLang = lang;
             const t = toolbarI18n[lang] || toolbarI18n.ar;
 
-            document.getElementById('btnDocBack').innerText = t.btnBack;
-            if (document.getElementById('btnDocWindowPrint')) {
-                document.getElementById('btnDocWindowPrint').innerText = t.btnWindowPrint;
-            }
-            document.getElementById('btnDocPrint').innerText = t.btnPrint;
-            document.getElementById('btnSimulateScan').innerText = t.btnVerify;
-            document.getElementById('docLangBtnText').innerText = t.langBtnText;
+            const elBack = document.getElementById('btnDocBack');
+            if (elBack) elBack.innerText = t.btnBack;
+            const elWindowPrint = document.getElementById('btnDocWindowPrint');
+            if (elWindowPrint) elWindowPrint.innerText = t.btnWindowPrint;
+            const elPrint = document.getElementById('btnDocPrint');
+            if (elPrint) elPrint.innerText = t.btnPrint;
+            const elVerify = document.getElementById('btnSimulateScan');
+            if (elVerify) elVerify.innerText = t.btnVerify;
+            const elLangBtn = document.getElementById('docLangBtnText');
+            if (elLangBtn) elLangBtn.innerText = t.langBtnText;
         }
 
         function getPermitFileBase() {
@@ -749,7 +752,8 @@
             if (data.idNumber && data.idNumber !== '—') {
                 const baseUrl = (window.APP_CONFIG && window.APP_CONFIG.BASE_URL) || window.location.origin;
                 const verificationUrl = `${baseUrl.replace(/\/$/, '')}/verify.html?id=${encodeURIComponent(data.idNumber)}`;
-                document.getElementById('btnSimulateScan').href = verificationUrl;
+                const elScan = document.getElementById('btnSimulateScan');
+                if (elScan) elScan.href = verificationUrl;
 
                 if (typeof QRCode !== 'undefined') {
                     new QRCode(qrContainer, {
@@ -762,7 +766,8 @@
                     qrContainer.innerHTML = `<img src="https://quickchart.io/qr?text=${encodeURIComponent(verificationUrl)}&size=120" alt="QR Code">`;
                 }
             } else {
-                document.getElementById('btnSimulateScan').href = 'verify.html';
+                const elScan = document.getElementById('btnSimulateScan');
+                if (elScan) elScan.href = 'verify.html';
                 qrContainer.innerHTML = `<div style="border: 1px dashed #cbd5e1; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: #94a3b8; text-align: center; padding: 4px;">QR Code<br>(لا توجد بيانات)</div>`;
             }
         }
