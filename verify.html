@@ -180,6 +180,59 @@
             background: #ef4444;
         }
 
+        /* ── Static Placeholder Skeleton Bars (Soft gray without animation) ── */
+        .skeleton {
+            background-color: #e2e8f0;
+            border-radius: 4px;
+            display: inline-block;
+            height: 1.15rem;
+            min-height: 1.15rem;
+            vertical-align: middle;
+            color: transparent !important;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .skeleton-name {
+            width: 60%;
+            max-width: 240px;
+        }
+
+        .skeleton-badge {
+            width: 75px;
+            height: 24px;
+            border-radius: 6px;
+            display: inline-block;
+            background-color: #e2e8f0;
+            border: none !important;
+            margin-top: 0.25rem;
+        }
+
+        .skeleton-date {
+            width: 35%;
+            max-width: 130px;
+        }
+
+        .skeleton-desc {
+            width: 85%;
+            max-width: 340px;
+        }
+
+        .skeleton-location {
+            width: 65%;
+            max-width: 260px;
+        }
+
+        .skeleton-facility-name {
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .skeleton-facility-num {
+            width: 40%;
+            max-width: 150px;
+        }
+
         /* Copy Button */
         .btn-copy-link {
             width: 100%;
@@ -373,32 +426,32 @@
 
             <div class="info-group">
                 <div class="info-label" id="lblEmployeeName">Employee Name:</div>
-                <div class="info-val" id="valEmployeeName">MD KHAIRUL ISLAM</div>
+                <div class="info-val skeleton skeleton-name" id="valEmployeeName"></div>
             </div>
 
             <div class="info-group">
                 <div class="info-label" id="lblPermitStatus">Permit Status:</div>
-                <div><span class="status-badge" id="valPermitStatus">Active</span></div>
+                <div><span class="skeleton-badge" id="valPermitStatus"></span></div>
             </div>
 
             <div class="info-group" style="margin-top: 0.9rem;">
                 <div class="info-label" id="lblPermitStart">Permit Start Date:</div>
-                <div class="info-val" id="valPermitStart">10/10/2026</div>
+                <div class="info-val skeleton skeleton-date" id="valPermitStart"></div>
             </div>
 
             <div class="info-group">
                 <div class="info-label" id="lblPermitEnd">Permit End Date:</div>
-                <div class="info-val" id="valPermitEnd">09/04/2027</div>
+                <div class="info-val skeleton skeleton-date" id="valPermitEnd"></div>
             </div>
 
             <div class="info-group">
                 <div class="info-label" id="lblContractDesc">Contract Description:</div>
-                <div class="info-val" id="valContractDesc">Joint cooperation between the two companies</div>
+                <div class="info-val skeleton skeleton-desc" id="valContractDesc"></div>
             </div>
 
             <div class="info-group">
                 <div class="info-label" id="lblWorkLocation">Work Location:</div>
-                <div class="info-val" id="valWorkLocation">الرياض، المملكة العربية السعودية</div>
+                <div class="info-val skeleton skeleton-location" id="valWorkLocation"></div>
             </div>
         </div>
 
@@ -408,12 +461,12 @@
 
             <div class="info-group">
                 <div class="info-label" id="lblFacilityName">Facility Name:</div>
-                <div class="info-val" id="valFacilityName">مؤسسة منيف عبد الله حسين الدوسري للتاجر</div>
+                <div class="info-val skeleton skeleton-facility-name" id="valFacilityName"></div>
             </div>
 
             <div class="info-group">
                 <div class="info-label" id="lblFacilityNumber">Facility Number:</div>
-                <div class="info-val" id="valFacilityNumber">2-2-681349</div>
+                <div class="info-val skeleton skeleton-facility-num" id="valFacilityNumber"></div>
             </div>
         </div>
 
@@ -423,12 +476,12 @@
 
             <div class="info-group">
                 <div class="info-label" id="lblCompanyName">Company Name:</div>
-                <div class="info-val" id="valCompanyName">مؤسسة مهارت الانجاز للمقاولات</div>
+                <div class="info-val skeleton skeleton-facility-name" id="valCompanyName"></div>
             </div>
 
             <div class="info-group">
                 <div class="info-label" id="lblCompanyNumber">Company Number:</div>
-                <div class="info-val" id="valCompanyNumber">1-4242031</div>
+                <div class="info-val skeleton skeleton-facility-num" id="valCompanyNumber"></div>
             </div>
         </div>
 
@@ -537,9 +590,9 @@
             document.getElementById('lblEmployeeName').innerText = t.employeeName;
             document.getElementById('lblPermitStatus').innerText = t.permitStatus;
 
-            // Re-render status badge with correct language text
+            // Re-render status badge with correct language text ONLY if loaded
             const badge = document.getElementById('valPermitStatus');
-            if (badge) {
+            if (badge && badge.dataset.loaded === 'true') {
                 const isExpired = badge.dataset.expired === 'true';
                 badge.innerText = isExpired ? t.expired : t.active;
                 badge.className = 'status-badge ' + (isExpired ? 'expired' : 'active');
@@ -565,36 +618,47 @@
         }
 
         function renderPermitDetails(data) {
-            document.getElementById('valEmployeeName').innerText = data.laborerName;
+            const setField = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.className = 'info-val';
+                    el.innerText = val || '-';
+                }
+            };
+
+            setField('valEmployeeName', data.laborerName);
 
             // Format dates as DD/MM/YYYY
             const formatDate = (dateStr) => {
-                if (!dateStr) return '';
+                if (!dateStr) return '-';
                 if (dateStr.includes('/')) return dateStr; // already formatted
                 const parts = dateStr.split('-');
                 if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
                 return dateStr;
             };
 
-            document.getElementById('valPermitStart').innerText = formatDate(data.startDate);
-            document.getElementById('valPermitEnd').innerText = formatDate(data.endDate);
-            document.getElementById('valContractDesc').innerText = data.contractDesc || '-';
-            document.getElementById('valWorkLocation').innerText = data.workLocation || '-';
+            setField('valPermitStart', formatDate(data.startDate));
+            setField('valPermitEnd', formatDate(data.endDate));
+            setField('valContractDesc', data.contractDesc || '-');
+            setField('valWorkLocation', data.workLocation || '-');
 
             // Smart status: compare endDate to today (live check)
             const badge = document.getElementById('valPermitStatus');
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const endDate = data.endDate ? new Date(data.endDate) : null;
-            const isExpired = endDate && endDate < today;
-            badge.dataset.expired = isExpired ? 'true' : 'false';
-            badge.innerText = isExpired ? i18n[currentLang].expired : i18n[currentLang].active;
-            badge.className = 'status-badge ' + (isExpired ? 'expired' : 'active');
+            if (badge) {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const endDate = data.endDate ? new Date(data.endDate) : null;
+                const isExpired = endDate && endDate < today;
+                badge.dataset.loaded = 'true';
+                badge.dataset.expired = isExpired ? 'true' : 'false';
+                badge.innerText = isExpired ? i18n[currentLang].expired : i18n[currentLang].active;
+                badge.className = 'status-badge ' + (isExpired ? 'expired' : 'active');
+            }
 
-            document.getElementById('valFacilityName').innerText = data.providerName;
-            document.getElementById('valFacilityNumber').innerText = data.providerNum;
-            document.getElementById('valCompanyName').innerText = data.beneficiaryName;
-            document.getElementById('valCompanyNumber').innerText = data.beneficiaryNum;
+            setField('valFacilityName', data.providerName);
+            setField('valFacilityNumber', data.providerNum);
+            setField('valCompanyName', data.beneficiaryName);
+            setField('valCompanyNumber', data.beneficiaryNum);
         }
 
         async function loadPermitDetails() {
