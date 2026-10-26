@@ -112,6 +112,10 @@ app.use((req, res, next) => {
     next();
 });
 // verify.html, images, logos, etc.
+app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'images')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname)));
 
 // ── Health Check ───────────────────────────────────────────────
