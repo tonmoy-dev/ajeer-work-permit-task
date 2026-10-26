@@ -5,6 +5,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const { requireAuth } = require('./auth');
 
 // ── Helper: Generate TQ permit number ─────────────────────────
 function generatePermitNumber(idNumber) {
@@ -33,8 +34,8 @@ function computeStatus(endDate) {
 
 
 // ── POST /api/permits ──────────────────────────────────────────
-// Submit a new permit (called from index.html form)
-router.post('/', (req, res) => {
+// Submit a new permit (called from permit-form.html form, protected)
+router.post('/', requireAuth, (req, res) => {
     const {
         laborerName, occupation, idNumber, nationality,
         providerName, providerNum,
@@ -126,8 +127,8 @@ router.get('/by-id/:idNumber', (req, res) => {
     const { idNumber } = req.params;
 
     const permit = db.prepare(
-        `SELECT * FROM permits WHERE id_number = ? ORDER BY created_at DESC LIMIT 1`
-    ).get(idNumber);
+        `SELECT * FROM permits WHERE id_number = ? OR permit_number = ? ORDER BY created_at DESC LIMIT 1`
+    ).get(idNumber, idNumber);
 
     if (!permit) {
         return res.status(404).json({ error: 'Permit not found', idNumber });

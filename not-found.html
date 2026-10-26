@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <title>Data Not Found | لم يتم العثور على البيانات</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1b365d;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+            --border-light: #e2e8f0;
+            --danger-bg: #fef2f2;
+            --danger-border: #fecaca;
+            --danger-text: #dc2626;
+            --radius: 16px;
+            --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        /* Subtle ambient decorative gradient */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 320px;
+            background: linear-gradient(180deg, rgba(27, 54, 93, 0.04) 0%, rgba(248, 250, 252, 0) 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .notfound-container {
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .notfound-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2.75rem 2rem;
+            text-align: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .icon-wrapper {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 1.5rem auto;
+            border-radius: 50%;
+            background: var(--danger-bg);
+            border: 2px solid var(--danger-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--danger-text);
+        }
+
+        .icon-wrapper svg {
+            width: 36px;
+            height: 36px;
+        }
+
+        .title-en {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.35rem;
+            direction: ltr;
+        }
+
+        .subtitle-en {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.96rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            direction: ltr;
+            line-height: 1.5;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border-light);
+            width: 80%;
+            margin: 0 auto 1.5rem auto;
+        }
+
+        .title-ar {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 0.35rem;
+            line-height: 1.4;
+        }
+
+        .subtitle-ar {
+            font-size: 0.98rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        @media (max-width: 480px) {
+            .notfound-card {
+                padding: 2rem 1.25rem;
+            }
+
+            .title-en, .title-ar {
+                font-size: 1.2rem;
+            }
+
+            .subtitle-en, .subtitle-ar {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="notfound-container">
+        <div class="notfound-card">
+            <!-- Warning / Alert Icon -->
+            <div class="icon-wrapper" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+            </div>
+
+            <!-- English Message -->
+            <h1 class="title-en">Data not found !</h1>
+            <p class="subtitle-en">Please contact to our system admin.</p>
+
+            <div class="divider"></div>
+
+            <!-- Arabic Message -->
+            <h2 class="title-ar">لم يتم العثور على البيانات!</h2>
+            <p class="subtitle-ar">يرجى التواصل مع إدارة النظام.</p>
+        </div>
+    </main>
+</body>
+
+</html>

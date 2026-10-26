@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive">
     <title>Ajeer Permit System - نظام تصاريح أجير</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,59 +41,6 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-        }
-
-        header,
-        .header-bar {
-            background: #ffffff;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 0.85rem 1.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-            width: 100%;
-        }
-
-        .header-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-logo-wrap {
-            display: flex;
-            align-items: center;
-        }
-
-        .verify-header-logo-ministry,
-        .header-logo-ministry {
-            height: 38px;
-            max-height: 42px;
-            width: auto;
-            display: block;
-            object-fit: contain;
-        }
-
-        .verify-header-logo-ajeer,
-        .header-logo-ajeer {
-            height: 36px;
-            max-height: 40px;
-            width: auto;
-            display: block;
-            object-fit: contain;
-        }
-
-        @media (max-width: 640px) {
-
-            .verify-header-logo-ministry,
-            .header-logo-ministry {
-                height: 30px;
-            }
-
-            .verify-header-logo-ajeer,
-            .header-logo-ajeer {
-                height: 28px;
-            }
         }
 
         .lang-btn {
@@ -410,38 +358,7 @@
 
 <body>
 
-    <!-- Header Bar -->
-    <div class="header-bar">
-        <div class="header-container">
-            <!-- Ministry of Human Resources Logo (Right side in RTL) -->
-            <div class="header-logo-wrap">
-                <img src="public/logo-ministry.png" onerror="this.onerror=null;this.src='logo-ministry.png';"
-                    alt="وزارة الموارد البشرية والتنمية الاجتماعية" class="verify-header-logo-ministry">
-            </div>
-
-            <!-- Ajeer Brand Logo (Left side in RTL) -->
-            <div class="header-logo-wrap">
-                <img src="public/logo-ajeer.png" onerror="this.onerror=null;this.src='logo-ajeer.png';" alt="Ajeer أجير"
-                    class="verify-header-logo-ajeer">
-            </div>
-
-            <!-- Hidden elements to preserve JS compatibility -->
-            <span class="badge-demo" id="txtBadgeDemo" style="display:none !important">منصة تصاريح العمل (Ajeer
-                Prototype)</span>
-            <span id="txtDemoSampleBtn" style="display:none !important"></span>
-            <button type="button" class="lang-btn" id="headerLangBtn" style="display:none !important"
-                onclick="toggleLanguage()">
-                <span id="langBtnText">English</span> 🌐
-            </button>
-        </div>
-    </div>
-
     <div class="main-container">
-        <div class="hero-banner">
-            <h1 id="txtHeroTitle">تصريح أجير</h1>
-            <p id="txtHeroDesc">أدخل بيانات التصريح لإصدار الوثيقة الرسمية المعتمدة وتفعيل رمز التحقق QR</p>
-        </div>
-
         <!-- Form -->
         <div class="form-card">
             <!-- Form Header with Demo Sample Action -->
@@ -678,13 +595,16 @@
             document.documentElement.lang = lang;
             document.title = t.docTitle;
 
-            document.getElementById('langBtnText').innerText = t.langBtnText;
-            document.getElementById('txtBadgeDemo').innerText = t.badgeDemo;
+            const elLangBtn = document.getElementById('langBtnText');
+            if (elLangBtn) elLangBtn.innerText = t.langBtnText;
+            const elBadge = document.getElementById('txtBadgeDemo');
+            if (elBadge) elBadge.innerText = t.badgeDemo;
             document.getElementById('txtHeroTitle').innerText = t.heroTitle;
             document.getElementById('txtHeroDesc').innerText = t.heroDesc;
             document.getElementById('txtFormCardTitle').innerText = t.formCardTitle;
             document.getElementById('txtFormCardSubtitle').innerText = t.formCardSubtitle;
-            document.getElementById('txtDemoSampleBtn').innerText = t.demoSampleBtn;
+            const elDemoBtn = document.getElementById('txtDemoSampleBtn');
+            if (elDemoBtn) elDemoBtn.innerText = t.demoSampleBtn;
             document.getElementById('txtClearFormBtn').innerText = t.clearFormBtn;
 
             document.getElementById('secLaborer').innerText = t.secLaborer;
@@ -759,8 +679,18 @@
             setTimeout(() => { toast.classList.remove('show'); }, 3000);
         }
 
-        // Initialize saved language on load
-        window.addEventListener('DOMContentLoaded', () => {
+        // Initialize saved language on load and verify auth
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const res = await fetch('/api/auth/check');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (!data.authenticated) {
+                        window.location.replace('/');
+                        return;
+                    }
+                }
+            } catch (e) { }
             applyLanguage(currentLang);
         });
 
@@ -805,16 +735,21 @@
                     window.location.href = `document.html?id=${encodeURIComponent(permit.idNumber)}`;
                     return;
                 }
-                //  else {
-                //     // Server explicitly rejected the request (e.g. validation / security) —
-                //     // do NOT fall back to localStorage; show the error and stay on the form.
-                //     let errMsg = 'Server error';
-                //     try { errMsg = (await response.json()).error || errMsg; } catch (e) { /* non-JSON body */ }
-                //     showToast('⚠️ ' + errMsg);
-                //     btn.innerHTML = t.btnSubmit;
-                //     btn.disabled = false;
-                //     return;
-                // }
+
+                if (response.status === 401) {
+                    window.location.href = '/';
+                    return;
+                }
+
+                let errMsg = 'Failed to submit permit';
+                try {
+                    const errData = await response.json();
+                    errMsg = errData.error || errMsg;
+                } catch (e) { }
+                showToast('⚠️ ' + errMsg);
+                btn.innerHTML = t.btnSubmit;
+                btn.disabled = false;
+                return;
             } catch (err) {
                 console.warn('⚠️ Server unavailable, using localStorage fallback:', err.message);
                 // ── Fallback: localStorage only (static file mode) ────────

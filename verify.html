@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive">
     <title>Ajeer Permit System - نظام تصاريح أجير</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -600,82 +601,28 @@
             applyLanguage(currentLang);
 
             const urlParams = new URLSearchParams(window.location.search);
-            const idParam = urlParams.get('id');
+            const idParam = (urlParams.get('id') || '').trim();
 
-            const defaultData = {
-                laborerName: "MD KHAIRUL ISLAM",
-                occupation: "عامل تحميل وتنزيل",
-                idNumber: "2602301927",
-                startDate: "2026-10-10",
-                endDate: "2027-04-09",
-                contractDesc: "Joint cooperation between the two companies",
-                workLocation: "الرياض، المملكة العربية السعودية",
-                providerName: "مؤسسة منيف عبد الله حسين الدوسري للتاجر",
-                providerNum: "2-2-681349",
-                beneficiaryName: "مؤسسة مهارت الانجاز للمقاولات",
-                beneficiaryNum: "1-4242031"
-            };
+            // Missing ID: immediately redirect to not-found
+            if (!idParam) {
+                window.location.replace('/not-found.html');
+                return;
+            }
 
-            // 1️⃣ Try server API (works from any device — the real fix for QR scanning)
-            if (idParam) {
-                try {
-                    const resp = await fetch(`/api/permits/by-id/${encodeURIComponent(idParam)}`);
-                    if (resp.ok) {
-                        const result = await resp.json();
-                        // Cache locally so offline still works
-                        localStorage.setItem('permit_' + idParam, JSON.stringify(result.permit));
+            try {
+                const resp = await fetch(`/api/permits/by-id/${encodeURIComponent(idParam)}`);
+                if (resp.ok) {
+                    const result = await resp.json();
+                    if (result && result.permit) {
                         return renderPermitDetails(result.permit);
-                    } else if (resp.status === 404) {
-                        // Permit not in DB — show warning
-                        showNotFoundWarning(idParam);
-                        return;
                     }
-                } catch (e) {
-                    console.warn('⚠️ API unavailable, using localStorage fallback:', e.message);
                 }
+                // Invalid or not found in DB: redirect to not-found page
+                window.location.replace('/not-found.html');
+            } catch (e) {
+                console.error('Error fetching permit details:', e);
+                window.location.replace('/not-found.html');
             }
-
-            // 2️⃣ localStorage fallback (works when server is off / static file mode)
-            let data = null;
-            if (idParam) {
-                const s = localStorage.getItem('permit_' + idParam);
-                if (s) data = JSON.parse(s);
-            }
-            if (!data) {
-                const s = localStorage.getItem('currentPermitData');
-                if (s) data = JSON.parse(s);
-            }
-            if (!data) data = defaultData;
-
-            renderPermitDetails(data);
-        }
-
-        function showNotFoundWarning(idParam) {
-            // Show a clear "not found / invalid" state on the page
-            document.getElementById('valEmployeeName').innerText = '—';
-            const badge = document.getElementById('valPermitStatus');
-            badge.innerText = 'Invalid / Not Found';
-            badge.className = 'status-badge expired';
-            badge.dataset.expired = 'true';
-            document.getElementById('valPermitStart').innerText = '—';
-            document.getElementById('valPermitEnd').innerText = '—';
-            document.getElementById('valContractDesc').innerText = '—';
-            document.getElementById('valWorkLocation').innerText = '—';
-            document.getElementById('valFacilityName').innerText = '—';
-            document.getElementById('valFacilityNumber').innerText = '—';
-            document.getElementById('valCompanyName').innerText = '—';
-            document.getElementById('valCompanyNumber').innerText = '—';
-
-            // Show alert banner
-            const banner = document.createElement('div');
-            banner.style.cssText = `
-                background:#fef2f2;border:1.5px solid #ef4444;color:#b91c1c;
-                padding:1rem 1.25rem;border-radius:10px;margin-bottom:1rem;
-                font-weight:700;font-size:0.95rem;text-align:center;
-            `;
-            banner.innerHTML = `⚠️ Permit not found`;
-            const container = document.querySelector('.content-container');
-            container.insertBefore(banner, container.firstChild.nextSibling);
         }
 
         function copyPageLink() {
