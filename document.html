@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive">
-    <title>Ajeer Permit System - نظام تصاريح أجير</title>
+    <title>Work Permit System - نظام تصاريح العمل</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -33,7 +33,99 @@
             background-color: #e2e8f0;
             color: #000000;
             line-height: 1.5;
-            padding: 20px 0;
+            padding: 0 0 20px 0;
+        }
+
+        /* Top Header Bar */
+        .header-bar {
+            width: 100%;
+            background: #ffffff;
+            padding: 0.85rem 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 15px;
+        }
+
+        .header-bar .header-container {
+            max-width: 210mm;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-logo-wrap {
+            display: flex;
+            align-items: center;
+        }
+
+        .verify-header-logo-ministry {
+            height: 38px;
+            max-height: 42px;
+            width: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .verify-header-logo-ajeer {
+            height: 36px;
+            max-height: 40px;
+            width: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .header-title-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #1b365d;
+            margin: 0;
+            font-family: 'Tajawal', 'Inter', sans-serif;
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        .header-subtitle {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #64748b;
+            margin-top: 2px;
+            font-family: 'Tajawal', 'Inter', sans-serif;
+        }
+
+        @media (max-width: 640px) {
+            .header-bar {
+                padding: 0.65rem 1rem;
+            }
+
+            .verify-header-logo-ministry {
+                height: 30px;
+            }
+
+            .verify-header-logo-ajeer {
+                height: 28px;
+            }
+
+            .header-title {
+                font-size: 1.05rem;
+            }
+
+            .header-subtitle {
+                font-size: 0.72rem;
+            }
         }
 
         /* ── External Toolbar (Screen view only) ── */
@@ -332,7 +424,7 @@
 
         /* ── Footer ── */
         .doc-footer {
-            margin-top: 40px;
+            margin-top: 30px;
             text-align: center;
             font-size: 0.82rem;
             font-weight: 600;
@@ -363,6 +455,7 @@
                 print-color-adjust: exact !important;
             }
 
+            .header-bar,
             .toolbar-actions {
                 display: none !important;
             }
@@ -479,11 +572,38 @@
 
 <body>
 
+    <!-- Top Header Bar -->
+    <header class="header-bar">
+        <div class="header-container">
+            <!-- Header Title: Work Permit System -->
+            <div class="header-title-wrap">
+                <h1 class="header-title">Work Permit System</h1>
+                <span class="header-subtitle">نظام تصاريح العمل</span>
+            </div>
+        </div>
+    </header>
+
 
     <!-- PDF generation loader -->
     <div class="pdf-loader" id="pdfLoader">
         <div class="pdf-spinner"></div>
         <div>جاري إنشاء ملف PDF...</div>
+    </div>
+
+    <!-- External Toolbar (Controls outside the document, hidden in PDF/Print) -->
+    <div class="toolbar-actions" id="docToolbar">
+        <a href="permit-form.html" class="btn-tool btn-back" id="btnDocBack">Back to form</a>
+        <div style="display:flex;gap:8px;align-items:center;">
+            <button onclick="window.print()" class="btn-tool btn-window-print" id="btnDocWindowPrint">🖨️ طباعة
+                (Print)</button>
+            <button onclick="downloadPDF()" class="btn-tool btn-print" id="btnDocPrint">⬇ تحميل PDF</button>
+            <a id="btnSimulateScan" href="#" target="_blank" class="btn-tool btn-verify" style="display: none;">📱 فحص
+                الـ QR (Verify)</a>
+            <button type="button" class="btn-tool btn-lang" id="btnDocLang" style="display:none !important"
+                onclick="toggleLanguage()" title="تغيير اللغة / Switch Language">
+                <span id="docLangBtnText">English</span> 🌐
+            </button>
+        </div>
     </div>
 
     <!-- A4 Document (Exact Clone of Attached Reference PDF) -->
@@ -615,14 +735,14 @@
         // Toolbar translation dictionary (Official document itself stays strictly in Arabic)
         const toolbarI18n = {
             ar: {
-                btnBack: "⬅ تعديل البيانات (Edit Form)",
+                btnBack: "Back to form",
                 btnWindowPrint: "🖨️ طباعة (Print)",
                 btnPrint: "⬇ تحميل PDF",
                 btnVerify: "📱 فحص الـ QR (Verify)",
                 langBtnText: "English"
             },
             en: {
-                btnBack: "⬅ Back to Form",
+                btnBack: "Back to form",
                 btnWindowPrint: "🖨️ Print Document",
                 btnPrint: "⬇ Download PDF",
                 btnVerify: "📱 Verify QR Code",

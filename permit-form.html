@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive">
-    <title>Ajeer Permit System - نظام تصاريح أجير</title>
+    <title>Work Permit System - نظام تصاريح العمل</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -41,6 +41,69 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+        }
+
+        /* ── Top Header Bar ── */
+        .header-bar {
+            width: 100%;
+            background: #ffffff;
+            padding: 0.85rem 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .header-container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-title-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #1b365d;
+            margin: 0;
+            font-family: 'Tajawal', 'Inter', sans-serif;
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        .header-subtitle {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #64748b;
+            margin-top: 2px;
+            font-family: 'Tajawal', 'Inter', sans-serif;
+        }
+
+        @media (max-width: 640px) {
+            .header-bar {
+                padding: 0.65rem 1rem;
+            }
+
+
+            .header-title {
+                font-size: 1.05rem;
+            }
+
+            .header-subtitle {
+                font-size: 0.72rem;
+            }
         }
 
         .lang-btn {
@@ -378,6 +441,17 @@
 
 <body>
 
+    <!-- Top Header Bar -->
+    <header class="header-bar">
+        <div class="header-container">
+            <!-- Header Title: Work Permit System -->
+            <div class="header-title-wrap">
+                <h1 class="header-title">Work Permit System</h1>
+                <span class="header-subtitle">نظام تصاريح العمل</span>
+            </div>
+        </div>
+    </header>
+
     <div class="main-container">
         <!-- Form -->
         <div class="form-card">
@@ -497,11 +571,6 @@
         </div>
     </div>
 
-    <footer>
-        <span id="txtFooter">جميع الحقوق محفوظة © 2026 - نظام أجير لحلول الموارد البشرية | وزارة الموارد البشرية
-            والتنمية الاجتماعية</span>
-    </footer>
-
     <script>
         function generatePermitNumber(idNumber) {
             if (!idNumber) return 'TQ' + Math.floor(100000 + Math.random() * 900000);
@@ -538,7 +607,7 @@
 
         const i18n = {
             ar: {
-                docTitle: "Ajeer Permit System - نظام تصاريح أجير",
+                docTitle: "Work Permit System - نظام تصاريح العمل",
                 langBtnText: "English",
                 badgeDemo: "منصة تصاريح العمل (Ajeer Prototype)",
                 heroTitle: "تصريح أجير",
@@ -572,7 +641,7 @@
                 toastCleared: "تم مسح جميع الحقول"
             },
             en: {
-                docTitle: "Ajeer Permit System - نظام تصاريح أجير",
+                docTitle: "Work Permit System - نظام تصاريح العمل",
                 langBtnText: "عربى",
                 badgeDemo: "Work Permit Platform (Ajeer Prototype)",
                 heroTitle: "Ajeer Permit",
@@ -601,7 +670,7 @@
                 workLocationPlaceholder: "Riyadh, Kingdom of Saudi Arabia",
                 btnSubmit: "📄 Submit & Generate permit document",
                 btnSubmitting: "⏳ Submitting & Generating Permit Document...",
-                footerText: "All Rights Reserved © 2026 - Ajeer HR Solutions | Ministry of Human Resources & Social Development",
+                footerText: "All Rights Reserved © 2026",
                 toastSampleLoaded: "✓ Demo sample data loaded successfully",
                 toastCleared: "Form cleared"
             }
