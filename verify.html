@@ -642,13 +642,10 @@
             setField('valContractDesc', data.contractDesc || '-');
             setField('valWorkLocation', data.workLocation || '-');
 
-            // Smart status: compare endDate to today (live check)
+            // Status badge: driven directly by the server API response
             const badge = document.getElementById('valPermitStatus');
             if (badge) {
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                const endDate = data.endDate ? new Date(data.endDate) : null;
-                const isExpired = endDate && endDate < today;
+                const isExpired = (data.status || '').toLowerCase() === 'expired';
                 badge.dataset.loaded = 'true';
                 badge.dataset.expired = isExpired ? 'true' : 'false';
                 badge.innerText = isExpired ? i18n[currentLang].expired : i18n[currentLang].active;

@@ -22,9 +22,15 @@ function generatePermitNumber(idNumber) {
     return 'TQ' + num;
 }
 
-// ── Helper: Compute live status ────────────────────────────────
+// ── Helper: Compute status based on date ─────────────────────────
 function computeStatus(endDate) {
     if (!endDate) return 'active';
+    // If format is YYYY-MM-DD, permit is valid through the entire end date (until 23:59:59.999)
+    if (/^\d{4}-\d{2}-\d{2}$/.test(endDate)) {
+        const [y, m, d] = endDate.split('-').map(Number);
+        const endOfDay = new Date(y, m - 1, d, 23, 59, 59, 999);
+        return endOfDay < new Date() ? 'expired' : 'active';
+    }
     const end = new Date(endDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -56,6 +62,9 @@ router.post('/', requireAuth, (req, res) => {
         }
     }
 
+    // Calculate status based on dates before saving to database
+    const status = computeStatus(endDate);
+
     // Check if a permit for this ID already exists today — if so, reuse it
     const existing = db.prepare(
         `SELECT * FROM permits WHERE id_number = ? ORDER BY created_at DESC LIMIT 1`
@@ -76,14 +85,14 @@ router.post('/', requireAuth, (req, res) => {
                 start_date       = ?,
                 end_date         = ?,
                 work_location    = ?,
-                status           = 'active'
+                status           = ?
             WHERE id = ?
         `).run(
             laborerName, occupation, nationality,
             providerName, providerNum,
             beneficiaryName, beneficiaryNum,
             contractDesc || '', startDate, endDate,
-            workLocation || '',
+            workLocation || '', status,
             existing.id
         );
 
@@ -102,14 +111,14 @@ router.post('/', requireAuth, (req, res) => {
         INSERT INTO permits
             (permit_number, laborer_name, occupation, id_number, nationality,
              provider_name, provider_num, beneficiary_name, beneficiary_num,
-             contract_desc, start_date, end_date, work_location)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+             contract_desc, start_date, end_date, work_location, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     const info = stmt.run(
         permitNumber, laborerName, occupation, idNumber, nationality,
         providerName, providerNum, beneficiaryName, beneficiaryNum,
-        contractDesc || '', startDate, endDate, workLocation || ''
+        contractDesc || '', startDate, endDate, workLocation || '', status
     );
 
     const permit = db.prepare('SELECT * FROM permits WHERE id = ?').get(info.lastInsertRowid);
@@ -198,7 +207,7 @@ function formatPermit(p) {
         startDate: p.start_date,
         endDate: p.end_date,
         workLocation: p.work_location,
-        status: computeStatus(p.end_date), // live computed, not stored
+        status: p.status || 'active',
         createdAt: p.created_at
     };
 }
