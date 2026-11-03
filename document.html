@@ -30,7 +30,7 @@
         }
 
         body {
-            background-color: #e2e8f0;
+            background-color: #f5f5f5;
             color: #000000;
             line-height: 1.5;
             padding: 0 0 20px 0;
@@ -191,12 +191,8 @@
         /* ── A4 Document Page ── */
         .page-container {
             background: #ffffff;
-            width: 210mm;
-            min-height: 297mm;
+            width: 186mm;
             margin: 0 auto;
-            padding: 12mm 15mm;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-            border: 1px solid #cbd5e1;
             position: relative;
             box-sizing: border-box;
             direction: rtl;
@@ -209,7 +205,7 @@
             justify-content: space-between;
             align-items: center;
             border: 1.5px solid #222222;
-            padding: 10px 14px 12px 14px;
+            padding: 10px 12px 10px 12px;
             margin-bottom: 12px;
             direction: ltr;
             /* Keeps QR code on physical left */
@@ -245,8 +241,8 @@
         }
 
         .permit-number {
-            font-size: 0.95rem;
-            font-weight: 800;
+            font-size: 0.75rem;
+            font-weight: 600;
             color: #000000;
             letter-spacing: 0.5px;
             text-align: center;
@@ -319,7 +315,7 @@
 
         .info-table-unified td {
             border: 0.5px solid #000000;
-            padding: 5px 10px;
+            padding: 10px 10px;
             font-size: 0.85rem;
             vertical-align: middle;
             text-align: right;
@@ -444,7 +440,7 @@
         @media print {
             @page {
                 size: A4 portrait;
-                margin: 8mm 12mm;
+                margin: 0;
             }
 
             body {
@@ -462,11 +458,12 @@
 
             .page-container {
                 box-shadow: none !important;
-                border: none !important;
-                width: 100% !important;
-                min-height: auto !important;
-                padding: 0 !important;
+                border: 1.5px solid #000000 !important;
+                width: 210mm !important;
+                min-height: 297mm !important;
+                padding: 8mm 10mm 8mm 10mm !important;
                 margin: 0 !important;
+                box-sizing: border-box !important;
             }
 
             .info-table-unified,
@@ -620,8 +617,8 @@
             <!-- Right: Title, Ajeer Logo, Ministry Logo -->
             <div class="header-content-right">
                 <div class="doc-main-title" id="docMainTitle">تصريح أجير - تعاقد أجير</div>
-                <img src="/images/logo-ajeer.png" onerror="this.onerror=null;this.src='images/logo-ajeer.png';" alt="Ajeer أجير"
-                    class="header-logo-ajeer">
+                <img src="/images/logo-ajeer.png" onerror="this.onerror=null;this.src='images/logo-ajeer.png';"
+                    alt="Ajeer أجير" class="header-logo-ajeer">
                 <img src="/images/logo-ministry.png" onerror="this.onerror=null;this.src='images/logo-ministry.png';"
                     alt="وزارة الموارد البشرية والتنمية الاجتماعية" class="header-logo-ministry">
             </div>
@@ -786,39 +783,41 @@
             const btn = document.getElementById('btnDocPrint');
             const loader = document.getElementById('pdfLoader');
             const page = document.querySelector('.page-container');
+
             btn.disabled = true;
             loader.classList.add('show');
 
-            // Render an off-screen copy so the visible document is never altered
-            const holder = document.createElement('div');
-            holder.style.cssText = 'position:fixed;left:-10000px;top:0;width:210mm;';
-            const clone = page.cloneNode(true);
-            clone.classList.add('pdf-mode');
-            holder.appendChild(clone);
-            document.body.appendChild(holder);
             try {
-                // Make sure web fonts are loaded so text isn't rasterized with fallback fonts
                 if (document.fonts && document.fonts.ready) await document.fonts.ready;
-                const num = document.getElementById('docPermitNumber').innerText.trim();
-                await html2pdf().set({
-                    margin: 0,
-                    filename: getPermitFileBase() + '.pdf',
-                    // PNG is lossless (no JPEG halos around text); scale 4 ≈ 384 DPI on A4
-                    image: { type: 'png' },
-                    html2canvas: { scale: 4, useCORS: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0, letterRendering: false },
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
-                    pagebreak: { mode: ['css', 'legacy'], avoid: ['.info-table-unified', '.declarations-block'] }
-                }).from(clone).save();
+
+                await html2pdf()
+                    .set({
+                        margin: [8, 10, 8, 10],
+                        filename: getPermitFileBase() + '.pdf',
+                        image: { type: 'png', quality: 1 },
+                        html2canvas: {
+                            scale: 4,
+                            useCORS: true,
+                            backgroundColor: '#ffffff',
+                            scrollX: 0,
+                            scrollY: 0
+                        },
+                        jsPDF: {
+                            unit: 'mm',
+                            format: 'a4',
+                            orientation: 'portrait'
+                        }
+                    })
+                    .from(page)
+                    .save();
             } catch (e) {
                 console.error(e);
                 alert('PDF generation failed');
             } finally {
-                holder.remove();
                 loader.classList.remove('show');
                 btn.disabled = false;
             }
         }
-
         function toggleLanguage() {
             const nextLang = (currentLang === 'ar' ? 'en' : 'ar');
             localStorage.setItem('ajeer_lang', nextLang);
